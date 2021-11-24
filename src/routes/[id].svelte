@@ -78,20 +78,12 @@
 			}
 		}
 
-		if (bestScore != isFinite()){
-			bestScore = "No Scores";
-		}
-
         worstScore = Math.min(...sessions.map(s => s.score));
         let allWorstScores = sessions.filter(session => session.score == worstScore);
 		for (const score of allWorstScores) {
 			if (!worstScores.find(s => s.player.id == score.player.id)){
 				worstScores.push(score);
 			}
-		}
-
-		if (worstScore != isFinite()){
-			worstScore = "No Scores";
 		}
 
         let sessionIds = [...new Set(sessions.map(session => session.gameSessionId))];
@@ -140,6 +132,10 @@
         for (const player of players) {
             player.winPercentage = Math.round(player.wins/player.games*100);
 
+			if (isNaN(player.winPercentage)){
+				player.winPercentage = 0;
+			}
+
             let totalScore = 0;
 
             for (const session of sessions.filter(s => s.player.id == player.id)){
@@ -147,7 +143,19 @@
             }
 
             player.averageScore = Math.round(totalScore / player.games);
+
+			if (isNaN(player.averageScore)){
+				player.averageScore = 0;
+			}
         }
+
+		if (worstScore != isFinite()){
+			worstScore = "No Scores";
+		}
+
+		if (bestScore != isFinite()){
+			bestScore = "No Scores";
+		}
 
 		return {bestScore: bestScore, bestScores: bestScores, worstScore: worstScore, worstScores: worstScores, numberOfGames: numberOfGames, mostWins: mostWins, mostWin: mostWin, mostLosses: mostLosses, mostLose: mostLose};
     }
