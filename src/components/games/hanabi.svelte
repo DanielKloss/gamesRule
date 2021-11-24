@@ -1,8 +1,9 @@
 <script>
   import Slider from "../imageScoreSlider.svelte";
-  import ScoreTracker from "../scoreTracker.svelte";
   import PlayerSelector from "../playerSelector.svelte";
-  import {fade} from 'svelte/transition';
+  import ScoreTracker from "../scoreTracker.svelte";
+
+  import { fade } from "svelte/transition";
 
   export let players;
 
@@ -47,21 +48,22 @@
       }
     }
 
-    let today = new Date(Date.now());
-    const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify({date: today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay(), gameId: 6, coopWin: coopWin}), headers: {'Content-Type': 'application/json'}});
+    let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 6, coopWin: coopWin};
+    const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
     const dataSession = await resultSession.json();
 
-    if (resultSession.status != 200 ) {
-      console.log(200, "something wrong with the database");
+    if (resultSession.status != 200) {
+      console.log(500, "something wrong with the database");
       return;
     }
 
     for (const player of players) {
       if(player.selected){
-        const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify({game: "hanabiGame", gameSessionId: dataSession.insertId, playerId: player.id, score: totalScore}), headers: {'Content-Type': 'application/json'}});
+        let playerSession = { game: "hanabigame", gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: totalScore};
+        const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
 
         if (resultPlayerSession.status != 200 ) {
-          console.log(200, "something wrong with the database");
+          console.log(500, "something wrong with the database");
           return;
         }
 
@@ -69,6 +71,10 @@
       }
     }
     players = players;
+    for (const colour of hanabiColours) {
+      colour.score = 0;
+    }
+    hanabiColours = hanabiColours;
   }
 </script>
 

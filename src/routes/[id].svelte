@@ -11,9 +11,13 @@
 
 		const resultPlayer = await fetch(`/api/players`);
 		const dataPlayer = await resultPlayer.json();
+	
+		console.log(dataGame.game.shortName);
 
 		const resultSessions = await fetch(`/api/sessions?shortName=${dataGame.game.shortName}Game`);
 		const dataSessions = await resultSessions.json();
+
+		console.log(dataSessions);
 
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
@@ -140,8 +144,6 @@
 		return {bestScore: bestScore, bestScores: bestScores, worstScore: worstScore, worstScores: worstScores, numberOfGames: numberOfGames, mostWins: mostWins, mostWin: mostWin, mostLosses: mostLosses, mostLose: mostLose};
     }
 
-	console.log(game);
-
 	if(gameComponents[game.shortName]){
 		game.component = gameComponents[game.shortName];
 	}
@@ -170,9 +172,9 @@
 
 <div style="{cssVarStyles}">
 	<div class="header">
-		<a rel="prefetch" href="/" class="homeLink"><img src="/images/home.png" alt="home" class="home"/></a>
+		<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="home"/></a>
 		<h1 class="title">{game.name}</h1>
-		<div class="homeLink invisibleHomeLink"><img src="/images/home.png" alt="hiddenHome" class="home"/></div>
+		<div class="invisibleHomeLink"><img src="/images/home.png" alt="hiddenHome" class="home"/></div>
 	</div>
 	
 	<Tabs {tabs} {activeTab} on:tabChange={(e) => {activeTab = e.detail}}/>
@@ -202,9 +204,6 @@
 		color: var(--primary);
 		text-align: center;
 		width: 50%;
-	}
-
-	.homeLink {
 	}
 
 	.invisibleHomeLink {

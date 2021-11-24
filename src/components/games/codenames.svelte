@@ -1,7 +1,7 @@
 <script>
     import {fade} from 'svelte/transition';
-    import TeamSelector from "../teamSelector.svelte";
-    import ScoreTracker from "../scoreTracker.svelte";
+    import TeamSelector from "../../components/teamSelector.svelte";
+    import ScoreTracker from "../../components/scoreTracker.svelte";
 
     export let players;
     let hidePlayers = false;

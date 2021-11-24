@@ -67,3 +67,11 @@ export async function getAllGameSessions(game) {
 		}
 	};
 }
+
+export async function insertPlayerSession(game, gameSessionId, playerId, score) {
+	await connection.query(`INSERT INTO ` + game + ` (gameSessionId, playerId, score) VALUES (?, ?, ?);`, [gameSessionId, playerId, score]);
+}
+
+export async function insertSession(date, gameId, coopWin) {
+	return await connection.query(`INSERT INTO GameSessions (sessionDate, gameId, coopWin) VALUES (?, ?, ?);`, [date, gameId, coopWin]);
+}
