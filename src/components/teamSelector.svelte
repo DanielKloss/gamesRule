@@ -2,7 +2,7 @@
     export let players;
     export let teams;
 
-    let hide;
+    export let hide;
 
     function changeTeam(player){
         let teamPosition = teams.indexOf(player.team);

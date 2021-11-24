@@ -12,12 +12,8 @@
 		const resultPlayer = await fetch(`/api/players`);
 		const dataPlayer = await resultPlayer.json();
 	
-		console.log(dataGame.game.shortName);
-
 		const resultSessions = await fetch(`/api/sessions?shortName=${dataGame.game.shortName}Game`);
 		const dataSessions = await resultSessions.json();
-
-		console.log(dataSessions);
 
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
@@ -169,7 +165,7 @@
 	let tabs = [
 		{name:"Rules", component: Rules, props: {activeGame: game}},
 		{name:"Stats", component: Stats, props: {stats: stats, players: players}},
-		{name:"Record Game", component: game.component, props: {activeGame: game, players: players}}
+		{name:"Record Game", component: game.component, props: {players: players}}
   	];
   	let activeTab = "Record Game";
 
@@ -188,12 +184,16 @@
 
 <div style="{cssVarStyles}">
 	<div class="header">
-		<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="home"/></a>
+		<div class="icons">
+			<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
+		</div>
 		<h1 class="title">{game.name}</h1>
-		<div class="invisibleHomeLink"><img src="/images/home.png" alt="hiddenHome" class="home"/></div>
+		<div class="invisibleIcons icons">
+			<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
+		</div>
 	</div>
-	
-	<Tabs {tabs} {activeTab} on:tabChange={(e) => {activeTab = e.detail}}/>
+
+	<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
 </div>
 
 <style>
@@ -216,13 +216,18 @@
 		padding: 1rem 1rem;
 	}
 
-	.home {
-		color: var(--primary);
-		text-align: center;
-		width: 50%;
+	.icons {
+		display: flex;
 	}
 
-	.invisibleHomeLink {
+	.iconButton {
+		color: var(--primary);
+		text-align: center;
+		width: 40%;
+		cursor: pointer;
+	}
+
+	.invisibleIcons {
 		visibility: hidden;
 	}
 </style>

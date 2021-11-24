@@ -58,6 +58,10 @@ export async function getAllPlayers() {
 	};
 }
 
+export async function insertPlayer(name, colour) {
+	await connection.query(`INSERT INTO players (name, colour) VALUES (?, ?);`, [name, colour]);
+}
+
 export async function getAllGameSessions(game) {
 	const rows = await connection.query(`SELECT gameSessionId, sessionDate, coopWin, score, players.id FROM ` + game + ` INNER JOIN GameSessions ON gameSessionId = GameSessions.id INNER JOIN Players ON playerId = Players.id;`);
 	const sessions = rows[0];

@@ -13,21 +13,22 @@
     $: playersSelected = players.filter(p => p.selected).length > 1;
 
     async function submitScores(){
-        let today = new Date(Date.now());
-        const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify({date: today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay(), gameId: 1}), headers: {'Content-Type': 'application/json'}});
+        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 1};
+        const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
         const dataSession = await resultSession.json();
 
         if (resultSession.status != 200 ) {
-            console.log(200, "something wrong with the database");
+            console.log(500, "something wrong with the database");
             return;
         }
 
         for (const player of players) {
             if(player.selected){
-                const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify({game: "bohnanzaGame", gameSessionId: dataSession.insertId, playerId: player.id, score: player.score}), headers: {'Content-Type': 'application/json'}});
+                let playerSession = { game: "bohnanzagame", gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: player.score};
+                const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
 
                 if (resultPlayerSession.status != 200 ) {
-                    console.log(200, "something wrong with the database");
+                    console.log(500, "something wrong with the database");
                     return;
                 }
 
