@@ -78,12 +78,20 @@
 			}
 		}
 
+		if (bestScore != isFinite()){
+			bestScore = "No Scores";
+		}
+
         worstScore = Math.min(...sessions.map(s => s.score));
         let allWorstScores = sessions.filter(session => session.score == worstScore);
 		for (const score of allWorstScores) {
 			if (!worstScores.find(s => s.player.id == score.player.id)){
 				worstScores.push(score);
 			}
+		}
+
+		if (worstScore != isFinite()){
+			worstScore = "No Scores";
 		}
 
         let sessionIds = [...new Set(sessions.map(session => session.gameSessionId))];
