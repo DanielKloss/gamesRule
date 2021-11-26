@@ -41,6 +41,11 @@
 		return game;
 	}
 
+	for (const game of games) {
+		console.log(game.gameTypes.gameTypes);
+		game.features = game.gameTypes.gameTypes.concat(game.gameMechanics.gameMechanics);
+	}
+
 	games = games.sort(function(a, b) {
 		var gameA = a.name.toUpperCase();
 		var gameB = b.name.toUpperCase();
@@ -55,13 +60,19 @@
 </svelte:head>
 
 <div class="pageFlex">
-	<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
-	<!-- <div on:click="{() => {createPlayerOpen = true}}"><img src="/images/addUser.png" alt="add user" class="iconButton"/></div> -->
+	<div class="tabsContainer">
+		<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
+	</div>
 	<div class="gamesFlex">
 		{#each games as game}
 			<div class="game">
 				<!--image or logo-->
 				<a class="gameText" rel="prefetch" href="/{game.id}">{game.name}</a>
+				<div>
+					{#each game.features as feature}
+						<p class="feature">{feature.name}</p>
+					{/each}
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -73,13 +84,18 @@
 		justify-content: space-evenly;
 		align-items: flex-start;
 		text-align: center;
-		margin-top: 1rem;
+		height: 100%;
+	}
+
+	.tabsContainer {
+		border-right: 0.25rem solid black;
+		height: 100%;
 	}
 
 	.gamesFlex {
 		display: flex;
 		flex-wrap: wrap;
-		margin: 0 1rem;
+		margin-left: 1rem;
 		gap: 1rem;
 	}
 
@@ -90,6 +106,7 @@
 		padding: 1rem;
 		cursor: pointer;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
@@ -100,4 +117,12 @@
 		font-size: 1.5rem;
 		text-transform: uppercase;
 	}
+
+	.feature {
+		display: inline;
+		margin-right: 0.1rem;
+	}
+
+	.feature:after { content: ", "; }
+	.feature:last-child:after { content: ""; }
 </style>
