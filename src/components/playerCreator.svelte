@@ -1,11 +1,9 @@
 <script>
     import iro from '@jaames/iro';
     import { onMount } from 'svelte';
-    import { createEventDispatcher } from 'svelte';
-
-    const dispatch = createEventDispatcher();
 
     export let playerName;
+    let lastCreated;
     let colourPicker;
 
     onMount(async () => {
@@ -23,79 +21,62 @@
 
     async function createPlayer(){
         let player = { name: playerName, colour: colourPicker.color.hexString };
-        dispatch('createPlayer', player)
-    }
+        let resultPlayer = await fetch(`/api/players`, {method: 'POST', body: JSON.stringify(player), headers: {'Content-Type': 'application/json'}});
 
-    function closeModal(){
-        dispatch('closeCreatePlayerModal');
+		if (resultPlayer.status != 200) {
+      		console.log(500, "something wrong with the database");
+      		return;
+    	}
+
+        lastCreated = playerName;
+        playerName = "";
+        colourPicker.color.set("#ffffff");
     }
 </script>
 
-<div class="modal" on:click|stopPropagation|self="{closeModal}">
-  <div class="modal-content">
-    <div class="modalOptions playerOptions">
+<div class="modal-content">
+    <div class="firstRow">
         <input type="text" bind:value="{playerName}" placeholder="Player Name">
-        <picker></picker>
-    </div>
-    <div class="modalOptions">
         <button on:click="{createPlayer}">Create</button>
-        <button on:click="{closeModal}">Cancel</button>
     </div>
-  </div>
+    <picker></picker>
+    {#if lastCreated}
+        <p class="creationMessage">{lastCreated} was created</p>
+    {/if}
 </div>
 
 
 <style>
-    .modal {
-        position: fixed; 
-        z-index: 1; 
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        overflow: auto; 
-        background-color: rgb(0,0,0); 
-        background-color: rgba(0,0,0,0.4); 
-    }
-
     .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1rem;
-        border-radius: 5px;
     }
 
-    .modalOptions {
+    .firstRow {
         display: flex;
-        align-items: center;
-        gap: 2rem;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
     input{
-        transform: skewX(-10deg);
         border: solid 0.2rem;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         padding: 0.3rem;
+        width: 50%;
     }
     
     button {
         padding: 0.5rem;
-        border: none;
-        font-size: 1.5rem;
+        border: 0.2rem solid black;
+        font-size: 1.2rem;
         font-weight: bold;
-        transform: skewX(-10deg);
         cursor: pointer;
-  }
-
-  @media (max-width: 750px) {
-    .playerOptions {
-        flex-direction: column;
     }
-  }
+
+    .creationMessage{
+        border-bottom: 0.1rem solid black;
+        padding: 0.5rem;
+    }
 </style>

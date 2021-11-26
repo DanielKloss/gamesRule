@@ -20,10 +20,17 @@
 </script>
   
 <script>
+	import Tabs from '../components/tabs.svelte';
 	import PlayerCreator from '../components/playerCreator.svelte';
 
 	export let games;
-	let createPlayerOpen = false;
+	
+	let tabs = [
+		{name:"Add Player", component: PlayerCreator, props: {}},
+		{name:"Filters"},
+		{name:"About"}
+	];
+	let activeTab = "Add Player";
 
 	function removeArticles(game) {
 		let words = game.split(" ");
@@ -32,17 +39,6 @@
 		if(words[0] == 'A' || words[0] == 'THE' || words[0] == 'AN')
 			return words.splice(1).join(" ");
 		return game;
-	}
-
-	async function createPlayer(player){
-		let resultPlayer = await fetch(`/api/players`, {method: 'POST', body: JSON.stringify(player), headers: {'Content-Type': 'application/json'}});
-
-		if (resultPlayer.status != 200) {
-      		console.log(500, "something wrong with the database");
-      		return;
-    	}
-
-		createPlayerOpen = false;
 	}
 
 	games = games.sort(function(a, b) {
@@ -59,7 +55,8 @@
 </svelte:head>
 
 <div class="pageFlex">
-	<div on:click="{() => {createPlayerOpen = true}}"><img src="/images/addUser.png" alt="add user" class="iconButton"/></div>
+	<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
+	<!-- <div on:click="{() => {createPlayerOpen = true}}"><img src="/images/addUser.png" alt="add user" class="iconButton"/></div> -->
 	<div class="gamesFlex">
 		{#each games as game}
 			<div class="game">
@@ -70,13 +67,11 @@
 	</div>
 </div>
 
-	{#if createPlayerOpen}
-		<PlayerCreator on:closeCreatePlayerModal={() => {createPlayerOpen = false}} on:createPlayer={(p) => createPlayer(p.detail)}/>
-	{/if}
-
 <style>
 	.pageFlex {
 		display: flex;
+		justify-content: space-evenly;
+		align-items: flex-start;
 		text-align: center;
 		margin-top: 1rem;
 	}
@@ -84,19 +79,19 @@
 	.gamesFlex {
 		display: flex;
 		flex-wrap: wrap;
-		width: 60%;
-		max-width: 500px;
-		margin: 0 auto;
-		justify-content: space-evenly;
+		margin: 0 1rem;
 		gap: 1rem;
 	}
 
 	.game {
+		flex: 1 1 0px;
 		background: var(--primary);
 		border: black 2px solid;
 		padding: 1rem;
-		width: 100%;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.gameText {
@@ -104,10 +99,5 @@
 		color: black;
 		font-size: 1.5rem;
 		text-transform: uppercase;
-	}
-
-	.iconButton {
-		width: 40%;
-		cursor: pointer;
 	}
 </style>
