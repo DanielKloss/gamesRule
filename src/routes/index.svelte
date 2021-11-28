@@ -1,20 +1,19 @@
 <script context="module">
 	export async function load ({ fetch }){
-		const result = await fetch('/api/games?id=-1');
-        
-        if (result.ok) {
-			const body = await result.json();
-            const games = body.games;
+		const gamesResult = await fetch('/api/games');
+		const gamesBody = await gamesResult.json();
+        const games = gamesBody.games;
 
-			return {
-				props: { games }
-			};
-		}
+		const typesResult = await fetch('/api/games?type=types');
+		const typesBody = await typesResult.json();
+		const types = typesBody.types;
 
-		const { message } = await result.json();
+		const mechanicsResult = await fetch('/api/games?type=mechanics');
+		const mechanicsBody = await mechanicsResult.json();
+		const mechanics = mechanicsBody.mechanics;
 
 		return {
-			error: new Error(message)
+			props: { games, types, mechanics }
 		};
 	}
 </script>
@@ -22,15 +21,12 @@
 <script>
 	import Tabs from '../components/tabs.svelte';
 	import PlayerCreator from '../components/playerCreator.svelte';
+	import Filter from '../components/filters.svelte';
+	import About from '../components/about.svelte';
 
 	export let games;
-	
-	let tabs = [
-		{name:"Add Player", component: PlayerCreator, props: {}},
-		{name:"Filters"},
-		{name:"About"}
-	];
-	let activeTab = "Add Player";
+	export let types;
+	export let mechanics;
 
 	function removeArticles(game) {
 		let words = game.split(" ");
@@ -41,8 +37,70 @@
 		return game;
 	}
 
+	function checkGameForType(game, filterType){
+		for (const type of game.gameTypes.gameTypes){
+			if (filterType.name == type.name){
+				return true;
+			} else {
+				return false;
+			}
+		}	 
+	}
+
+	function checkGameForMechanic(game, filterMechanic){
+		for (const mechanic of game.gameMechanics.gameMechanics){
+			if (filterMechanic.name == mechanic.name){
+				return true;
+			} else {
+				return false;
+			}
+		}	 
+	}
+
+	function updateFilters(filters) {
+		if (filters.isOn){
+			if (filters.timeIsOn){
+				filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime);
+			}
+			if (filters.playersIsOn) {
+				filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players && game.minPlayers <= filters.players);
+			}
+			for (var i = filteredGames.length - 1; i >= 0; i--) {
+				for (const filterType of filters.types){
+					if (checkGameForType(filteredGames[i], filterType)){
+						continue;
+					} else {
+						let index = filteredGames.indexOf(filteredGames[i]);
+						filteredGames.splice(index, 1);
+						break;
+					}
+				}
+				for (const filterMechanic of filters.mechanics){
+					if (checkGameForMechanic(filteredGames[i], filterMechanic)){
+						continue;
+					} else {
+						let index = filteredGames.indexOf(filteredGames[i]);
+						filteredGames.splice(index, 1);
+						break;
+					}
+				}
+			}
+		} else {
+			filteredGames = games;
+		}
+	}
+
+	let maxPlayTime = games.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;
+	let maxPlayers = games.reduce(function(max, game) { return game.maxPlayers > max.maxPlayers? game : max; }).maxPlayers;
+
+	let tabs = [
+		{name:"Add", component: PlayerCreator, props: {}},
+		{name:"Filters", component: Filter, props: {types: types, mechanics: mechanics, maxPlayTime: maxPlayTime, maxPlayers: maxPlayers}},
+		{name:"About", component: About, props:{}}
+	];
+	let activeTab = "Filters";
+
 	for (const game of games) {
-		console.log(game.gameTypes.gameTypes);
 		game.features = game.gameTypes.gameTypes.concat(game.gameMechanics.gameMechanics);
 	}
 
@@ -53,6 +111,8 @@
 		gameB = removeArticles(gameB);
 		return (gameA < gameB) ? -1 : (gameA > gameB) ? 1 : 0;
 	});
+
+	let filteredGames = games;
 </script>
 
 <svelte:head>
@@ -61,10 +121,10 @@
 
 <div class="pageFlex">
 	<div class="tabsContainer">
-		<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
+		<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail} on:filtersChanged={(e) => updateFilters(e.detail.detail)}/>
 	</div>
 	<div class="gamesFlex">
-		{#each games as game}
+		{#each filteredGames as game}
 			<div class="game">
 				<!--image or logo-->
 				<a class="gameText" rel="prefetch" href="/{game.id}">{game.name}</a>

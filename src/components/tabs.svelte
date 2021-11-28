@@ -17,7 +17,7 @@
 
   {#each tabs as tab}
       {#if activeTab === tab.name}
-          <svelte:component this={tab.component} {...tab.props}/>
+          <svelte:component this={tab.component} {...tab.props} on:filtersChanged={(e) => dispatch('filtersChanged', e)}/>
       {/if}
   {/each}
 </div>

@@ -28,6 +28,26 @@ export async function getGame(id) {
     };
 }
 
+export async function getTypes() {
+	const rows = await connection.query("SELECT name FROM Types");
+	const types = rows[0];
+	return {
+		body: {
+			types
+		}
+	}
+}
+
+export async function getMechanics() {
+	const rows = await connection.query('SELECT name FROM Mechanics');
+	const mechanics = rows[0];
+	return {
+		body: {
+			mechanics
+		}
+	};
+}
+
 export async function getGameTypes(gameId) {
 	const rows = await connection.query("SELECT Types.name FROM Games INNER JOIN GameTypes ON Games.id = GameTypes.GameId INNER JOIN Types ON GameTypes.TypeId = Types.id WHERE Games.id = ?;", [gameId]);
 	const gameTypes = rows[0];
