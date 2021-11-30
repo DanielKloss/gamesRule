@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
+    import RangeSlider from "svelte-range-slider-pips";
     const dispatch = createEventDispatcher();
 
     export let types;
@@ -9,11 +10,8 @@
     export let maxPlayers;
 
     let filters = {
-        isOn: false,
-        timeIsOn: false,
-        playersIsOn: false,
-        playTime: maxPlayTime,
-        players: maxPlayers,
+        playTime: [0, maxPlayTime],
+        players: [1, maxPlayers],
         types: [],
         mechanics: []
     }
@@ -40,33 +38,14 @@
 </script>
 
 <div class="modal-content">
-    <div class="checkboxContainer">
-        <div>
-            <input type="checkbox" bind:checked="{filters.isOn}" on:change="{dispatch('filtersChanged', filters)}"/>
-            <p class="checkboxLabel">Apply Filters</p>
-        </div>
+    <h2>Play Time</h2>
+    <div class="sliderContainer">
+        <RangeSlider range float pips step={5} bind:values={filters.playTime} min={0} max={maxPlayTime} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
     </div>
 
-    <div class="checkboxContainer">
-        <div>
-            <input type="checkbox" bind:checked="{filters.timeIsOn}" on:change="{dispatch('filtersChanged', filters)}"/>
-            <p class="checkboxLabel">Play Time</p>
-        </div>
-    </div>
+    <h2>Players</h2>
     <div class="sliderContainer">
-        <input type="range" min="0" step="5" max={maxPlayTime} bind:value={filters.playTime} on:change="{dispatch('filtersChanged', filters)}">
-        <p>{filters.playTime}</p>
-    </div>
-    
-    <div class="checkboxContainer">
-        <div>
-            <input type="checkbox" bind:checked="{filters.playersIsOn}" on:change="{dispatch('filtersChanged', filters)}"/>
-            <p class="checkboxLabel">Number of Players</p>
-        </div>
-    </div>
-    <div class="sliderContainer">
-        <input type="range" min="1" max={maxPlayers} bind:value={filters.players} on:change="{dispatch('filtersChanged', filters)}">
-        <p>{filters.players}</p>
+        <RangeSlider range float pips step={1} bind:values={filters.players} min={1} max={maxPlayers} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
     </div>
 
     <h2>Types</h2>
@@ -110,6 +89,7 @@
 
     .sliderContainer {
         display: flex;
-        gap: 1rem;
+        flex-direction: column;
+        align-self: stretch;
     }
 </style>

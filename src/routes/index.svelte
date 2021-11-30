@@ -58,35 +58,27 @@
 	}
 
 	function updateFilters(filters) {
-		if (filters.isOn){
-			if (filters.timeIsOn){
-				filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime);
-			}
-			if (filters.playersIsOn) {
-				filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players && game.minPlayers <= filters.players);
-			}
-			for (var i = filteredGames.length - 1; i >= 0; i--) {
-				for (const filterType of filters.types){
-					if (checkGameForType(filteredGames[i], filterType)){
-						continue;
-					} else {
-						let index = filteredGames.indexOf(filteredGames[i]);
-						filteredGames.splice(index, 1);
-						break;
-					}
-				}
-				for (const filterMechanic of filters.mechanics){
-					if (checkGameForMechanic(filteredGames[i], filterMechanic)){
-						continue;
-					} else {
-						let index = filteredGames.indexOf(filteredGames[i]);
-						filteredGames.splice(index, 1);
-						break;
-					}
+		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime[1] && game.maxPlayTime >= filters.playTime[0]);
+		filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players[0] && game.minPlayers <= filters.players[1]);
+		for (var i = filteredGames.length - 1; i >= 0; i--) {
+			for (const filterType of filters.types){
+				if (checkGameForType(filteredGames[i], filterType)){
+					continue;
+				} else {
+					let index = filteredGames.indexOf(filteredGames[i]);
+					filteredGames.splice(index, 1);
+					break;
 				}
 			}
-		} else {
-			filteredGames = games;
+			for (const filterMechanic of filters.mechanics){
+				if (checkGameForMechanic(filteredGames[i], filterMechanic)){
+					continue;
+				} else {
+					let index = filteredGames.indexOf(filteredGames[i]);
+					filteredGames.splice(index, 1);
+					break;
+				}
+			}
 		}
 	}
 

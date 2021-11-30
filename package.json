@@ -21,6 +21,7 @@
   "dependencies": {
     "@jaames/iro": "^5.5.2",
     "dotenv": "^10.0.0",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "svelte-range-slider-pips": "^2.0.0"
   }
 }
