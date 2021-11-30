@@ -70,6 +70,8 @@
 					break;
 				}
 			}
+		}
+		for (var i = filteredGames.length - 1; i >= 0; i--) {
 			for (const filterMechanic of filters.mechanics){
 				if (checkGameForMechanic(filteredGames[i], filterMechanic)){
 					continue;
