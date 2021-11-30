@@ -117,7 +117,7 @@
 		{#each filteredGames as game}
 			<div class="game">
 				<!--image or logo-->
-				<a class="gameText" rel="prefetch" href="/{game.id}">{game.name}</a>
+				<a class="gameText" href="/{game.id}">{game.name}</a>
 				<div>
 					<img src="/images/time.png" alt="play time" class="icon"/>
 					<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
