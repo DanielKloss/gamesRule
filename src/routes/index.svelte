@@ -121,6 +121,12 @@
 				<!--image or logo-->
 				<a class="gameText" rel="prefetch" href="/{game.id}">{game.name}</a>
 				<div>
+					<img src="/images/time.png" alt="play time" class="icon"/>
+					<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
+					<img src="/images/players.png" alt="players" class="icon"/>
+					<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
+				</div>
+				<div>
 					{#each game.features as feature}
 						<p class="feature">{feature.name}</p>
 					{/each}
@@ -133,34 +139,31 @@
 <style>
 	.pageFlex {
 		display: flex;
-		justify-content: space-evenly;
-		align-items: flex-start;
-		text-align: center;
-		height: 100%;
 	}
 
 	.tabsContainer {
 		border-right: 0.25rem solid black;
-		height: 100%;
 	}
 
 	.gamesFlex {
-		display: flex;
-		flex-wrap: wrap;
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: max-content;
 		margin-left: 1rem;
-		gap: 1rem;
+		gap: 0.5rem;
+		text-align: center;
 	}
 
 	.game {
-		flex: 1 1 0px;
 		background: var(--primary);
 		border: black 2px solid;
 		padding: 1rem;
 		cursor: pointer;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: center;
+		gap: 0.5rem;
 	}
 
 	.gameText {
@@ -177,4 +180,17 @@
 
 	.feature:after { content: ", "; }
 	.feature:last-child:after { content: ""; }
+
+	.icon {
+		height: 1rem;
+	}
+
+	.timeText {
+		display: inline;
+		margin-right: 1rem;
+	}
+
+	.playerText {
+		display: inline;
+	}
 </style>

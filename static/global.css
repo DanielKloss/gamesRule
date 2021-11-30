@@ -9,14 +9,9 @@
     font-style: normal;
 }
 
-html {
-  height: 100%;
-}
-
 body {
   margin: 0;
   font-family: 'Ubuntu', sans-serif;
-  min-height: 100%;
   padding: 1rem;
 }
 
