@@ -41,8 +41,6 @@
 		for (const type of game.gameTypes.gameTypes){
 			if (filterType.name == type.name){
 				return true;
-			} else {
-				return false;
 			}
 		}	 
 	}
@@ -51,8 +49,6 @@
 		for (const mechanic of game.gameMechanics.gameMechanics){
 			if (filterMechanic.name == mechanic.name){
 				return true;
-			} else {
-				return false;
 			}
 		}	 
 	}
