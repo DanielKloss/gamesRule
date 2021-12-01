@@ -146,7 +146,7 @@
 	.gamesFlex {
 		width: 100%;
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 		grid-auto-rows: max-content;
 		margin-left: 1rem;
 		gap: 0.5rem;
