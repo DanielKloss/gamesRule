@@ -20,7 +20,7 @@
     list-style: none;
     text-align: center;
     line-height: 1.75rem;
-    margin: 2rem auto;
+    margin: 1rem auto;
     width: 75%;
     max-width: 700px;
     padding: 0;
@@ -35,7 +35,7 @@
   }
 
   .rules{
-    margin: 2rem auto;
+    margin: 0 auto;
     width: 75%;
     line-height: 1.75rem;
     padding: 0;

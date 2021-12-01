@@ -185,11 +185,11 @@
 <div style="{cssVarStyles}">
 	<div class="header">
 		<div class="icons">
-			<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
+			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
 		</div>
 		<h1 class="title">{game.name}</h1>
 		<div class="invisibleIcons icons">
-			<a rel="prefetch" href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
+			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
 		</div>
 	</div>
 
@@ -217,14 +217,14 @@
 	}
 
 	.icons {
-		display: flex;
+		margin-left: 3rem;
 	}
 
 	.iconButton {
 		color: var(--primary);
 		text-align: center;
-		width: 40%;
 		cursor: pointer;
+		height: 2rem;
 	}
 
 	.invisibleIcons {

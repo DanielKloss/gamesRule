@@ -103,13 +103,21 @@
 	});
 
 	let filteredGames = games;
+
+	let styles = {
+		'primary': "#BABFD1"
+	};
+
+	$: cssVarStyles = Object.entries(styles)
+		.map(([key, value]) => `--${key}:${value}`)
+		.join(';');
 </script>
 
 <svelte:head>
 	<title>Home</title>
 </svelte:head>
 
-<div class="pageFlex">
+<div class="pageFlex" style="{cssVarStyles}">
 	<div class="tabsContainer">
 		<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail} on:filtersChanged={(e) => updateFilters(e.detail.detail)}/>
 	</div>
