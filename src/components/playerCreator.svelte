@@ -9,7 +9,7 @@
     onMount(async () => {
 		colourPicker = new iro.ColorPicker('picker', {
             width: 200,
-            borderWidth: 3,
+            borderWidth: 2.5,
             borderColor: "#000000",
             layout: [
                 { 
@@ -61,7 +61,7 @@
     }
 
     input{
-        border: solid 0.2rem;
+        border: solid 0.15rem;
         font-size: 1.2rem;
         padding: 0.3rem;
         width: 50%;
@@ -69,7 +69,7 @@
     
     button {
         padding: 0.5rem;
-        border: 0.2rem solid black;
+        border: 0.15rem solid black;
         font-size: 1.2rem;
         font-weight: bold;
         cursor: pointer;
