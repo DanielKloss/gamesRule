@@ -124,18 +124,28 @@
 	<div class="gamesFlex">
 		{#each filteredGames as game}
 			<div class="game">
-				<!--image or logo-->
-				<a class="gameText" href="/{game.id}">{game.name}</a>
-				<div>
-					<img src="/images/time.png" alt="play time" class="icon"/>
-					<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
-					<img src="/images/players.png" alt="players" class="icon"/>
-					<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
-				</div>
-				<div>
-					{#each game.features as feature}
-						<p class="feature">{feature.name}</p>
-					{/each}
+				<img class="gameIcon" src="/images/gameIcons/{game.shortName}.png" alt="{game.shortName} Icon"/>
+				<div class="gameInfo">
+					<a class="gameText" href="/{game.id}">{game.name}</a>
+					<div>
+						<img src="/images/time.png" alt="play time" class="icon"/>
+						{#if game.minPlayTime == game.maxPlayTime}
+							<p class="timeText">{game.minPlayTime}</p>
+						{:else}
+							<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
+						{/if}
+						<img src="/images/players.png" alt="players" class="icon"/>
+						{#if game.minPlayers == game.maxPlayers}
+							<p class="playerText">{game.minPlayers}</p>
+						{:else}
+							<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
+						{/if}
+					</div>
+					<div>
+						{#each game.features as feature}
+							<p class="feature">{feature.name}</p>
+						{/each}
+					</div>
 				</div>
 			</div>
 		{/each}
@@ -167,7 +177,6 @@
 		padding: 1rem;
 		cursor: pointer;
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		gap: 0.5rem;
 	}
@@ -177,6 +186,10 @@
 		color: black;
 		font-size: 1.5rem;
 		text-transform: uppercase;
+	}
+
+	.gameIcon {
+		height: 5rem;
 	}
 
 	.feature {

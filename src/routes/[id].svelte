@@ -38,7 +38,12 @@
 	import ROHOG from "../components/games/ROHOG.svelte";
 	import Bohnanza from "../components/games/bohnanza.svelte";
 	import Codenames from "../components/games/codenames.svelte";
-	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames };
+	import SixNimmt from "../components/games/sixNimmt.svelte";
+	import Pandemic from "../components/games/pandemic.svelte";
+	import LostCities from "../components/games/lostCities.svelte";
+	import Resistance from "../components/games/resistance.svelte";
+	import Tokaido from "../components/games/tokaido.svelte";
+	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido };
 
 	export let game;
 	export let players;
