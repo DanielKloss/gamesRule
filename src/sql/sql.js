@@ -9,7 +9,7 @@ const connection = await mysql.createConnection({
 });
 
 export async function getAllGames() {
-    const rows = await connection.query("SELECT * FROM Games");
+    const rows = await connection.query("SELECT gameId, name, shortName, colour, highScoreWins, minPlayers, maxPlayers, minPlayTime, maxPlayTime FROM Games");
     const games = rows[0];
     return {
 			body: {
@@ -19,7 +19,7 @@ export async function getAllGames() {
 };
 
 export async function getGame(id) {
-    const rows = await connection.query("SELECT name, shortName, highScoreWins, colour FROM Games WHERE games.id = ?;", [id]);
+    const rows = await connection.query("SELECT name, shortName, highScoreWins, colour FROM Games WHERE games.gameId = ?;", [id]);
     const game = rows[0][0];
     return {
         body: {
@@ -28,12 +28,12 @@ export async function getGame(id) {
     };
 }
 
-export async function getTypes() {
-	const rows = await connection.query("SELECT name FROM Types");
-	const types = rows[0];
+export async function getCategories() {
+	const rows = await connection.query("SELECT name FROM Categories");
+	const categories = rows[0];
 	return {
 		body: {
-			types
+			categories
 		}
 	}
 }
@@ -48,18 +48,18 @@ export async function getMechanics() {
 	};
 }
 
-export async function getGameTypes(gameId) {
-	const rows = await connection.query("SELECT Types.name FROM Games INNER JOIN GameTypes ON Games.id = GameTypes.GameId INNER JOIN Types ON GameTypes.TypeId = Types.id WHERE Games.id = ?;", [gameId]);
-	const gameTypes = rows[0];
+export async function getGameCategories(gameId) {
+	const rows = await connection.query("SELECT Categories.name FROM Games INNER JOIN GameCategories ON Games.gameId = GameCategories.GameId INNER JOIN Categories ON GameCategories.CategoryId = Categories.CategoryId WHERE Games.gameId = ?;", [gameId]);
+	const gameCategories = rows[0];
 	return {
 		body: {
-			gameTypes
+			gameCategories
 		}
 	}
 }
 
 export async function getGameMechanics(gameId) {
-	const rows = await connection.query("SELECT Mechanics.name FROM Games INNER JOIN GameMechanics ON Games.id = GameMechanics.GameId INNER JOIN Mechanics ON GameMechanics.MechanicId = Mechanics.id WHERE Games.id = ?;", [gameId]);
+	const rows = await connection.query("SELECT Mechanics.name FROM Games INNER JOIN GameMechanics ON Games.gameId = GameMechanics.GameId INNER JOIN Mechanics ON GameMechanics.MechanicId = Mechanics.mechanicId WHERE Games.gameId = ?;", [gameId]);
 	const gameMechanics = rows[0];
 	return {
 		body: {
@@ -89,7 +89,7 @@ export async function getRules(id) {
 }
 
 export async function getAllPlayers() {
-	const rows = await connection.query('SELECT id, name, colour FROM Players;');
+	const rows = await connection.query('SELECT playerId, name, colour FROM Players;');
 	const players = rows[0];
 	return {
 		body: {
@@ -102,8 +102,10 @@ export async function insertPlayer(name, colour) {
 	await connection.query(`INSERT INTO players (name, colour) VALUES (?, ?);`, [name, colour]);
 }
 
-export async function getAllGameSessions(game) {
-	const rows = await connection.query(`SELECT gameSessionId, sessionDate, coopWin, score, players.id FROM ` + game + ` INNER JOIN GameSessions ON gameSessionId = GameSessions.id INNER JOIN Players ON playerId = Players.id;`);
+export async function getAllGameSessions(id) {
+	const rows = await connection.query(
+		`SELECT playerSessions.gameSessionId, sessionDate, coopWin, score, players.playerId FROM playerSessions INNER JOIN GameSessions ON playerSessions.gameSessionId = GameSessions.gameSessionId INNER JOIN Players ON playerSessions.playerId = Players.playerId WHERE gameSessions.gameId = ?;`, [id]
+	);
 	const sessions = rows[0];
 	return {
 		body: {
@@ -112,8 +114,8 @@ export async function getAllGameSessions(game) {
 	};
 }
 
-export async function insertPlayerSession(game, gameSessionId, playerId, score) {
-	await connection.query(`INSERT INTO ` + game + ` (gameSessionId, playerId, score) VALUES (?, ?, ?);`, [gameSessionId, playerId, score]);
+export async function insertPlayerSession(gameSessionId, playerId, score) {
+	await connection.query(`INSERT INTO playerSessions (gameSessionId, playerId, score) VALUES (?, ?, ?);`, [gameSessionId, playerId, score]);
 }
 
 export async function insertSession(date, gameId, coopWin) {

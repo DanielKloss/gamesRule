@@ -4,16 +4,16 @@
 		const gamesBody = await gamesResult.json();
         const games = gamesBody.games;
 
-		const typesResult = await fetch('/api/games?type=types');
-		const typesBody = await typesResult.json();
-		const types = typesBody.types;
+		const categoriesResult = await fetch('/api/games?type=categories');
+		const categoriesBody = await categoriesResult.json();
+		const categories = categoriesBody.categories;
 
 		const mechanicsResult = await fetch('/api/games?type=mechanics');
 		const mechanicsBody = await mechanicsResult.json();
 		const mechanics = mechanicsBody.mechanics;
 
 		return {
-			props: { games, types, mechanics }
+			props: { games, categories, mechanics }
 		};
 	}
 </script>
@@ -25,7 +25,7 @@
 	import About from '../components/about.svelte';
 
 	export let games;
-	export let types;
+	export let categories;
 	export let mechanics;
 
 	function removeArticles(game) {
@@ -37,9 +37,9 @@
 		return game;
 	}
 
-	function checkGameForType(game, filterType){
-		for (const type of game.gameTypes.gameTypes){
-			if (filterType.name == type.name){
+	function checkGameForCategory(game, filtercategory){
+		for (const category of game.gameCategories.gameCategories){
+			if (filtercategory.name == category.name){
 				return true;
 			}
 		}	 
@@ -57,8 +57,8 @@
 		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime[1] && game.maxPlayTime >= filters.playTime[0]);
 		filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players[0] && game.minPlayers <= filters.players[1]);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
-			for (const filterType of filters.types){
-				if (checkGameForType(filteredGames[i], filterType)){
+			for (const filterCategory of filters.categories){
+				if (checkGameForCategory(filteredGames[i], filterCategory)){
 					continue;
 				} else {
 					let index = filteredGames.indexOf(filteredGames[i]);
@@ -85,13 +85,13 @@
 
 	let tabs = [
 		{name:"Add", component: PlayerCreator, props: {}},
-		{name:"Filters", component: Filter, props: {types: types, mechanics: mechanics, maxPlayTime: maxPlayTime, maxPlayers: maxPlayers}},
+		{name:"Filters", component: Filter, props: {categories : categories, mechanics: mechanics, maxPlayTime: maxPlayTime, maxPlayers: maxPlayers}},
 		{name:"About", component: About, props:{}}
 	];
 	let activeTab = "Filters";
 
 	for (const game of games) {
-		game.features = game.gameTypes.gameTypes.concat(game.gameMechanics.gameMechanics);
+		game.features = game.gameCategories.gameCategories.concat(game.gameMechanics.gameMechanics);
 	}
 
 	games = games.sort(function(a, b) {
@@ -125,27 +125,29 @@
 		{#each filteredGames as game}
 			<div class="game">
 				<img class="gameIcon" src="/images/gameIcons/{game.shortName}.png" alt="{game.shortName} Icon"/>
-				<div class="gameInfo">
-					<a class="gameText" href="/{game.id}">{game.name}</a>
-					<div>
-						<img src="/images/time.png" alt="play time" class="icon"/>
-						{#if game.minPlayTime == game.maxPlayTime}
-							<p class="timeText">{game.minPlayTime}</p>
-						{:else}
-							<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
-						{/if}
-						<img src="/images/players.png" alt="players" class="icon"/>
-						{#if game.minPlayers == game.maxPlayers}
-							<p class="playerText">{game.minPlayers}</p>
-						{:else}
-							<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
-						{/if}
-					</div>
-					<div>
-						{#each game.features as feature}
-							<p class="feature">{feature.name}</p>
-						{/each}
-					</div>
+				<div>
+					<a class="gameLink" href="/{game.gameId}">
+						<p class="gameText">{game.name}</p>
+						<div>
+							<img src="/images/time.png" alt="play time" class="icon"/>
+							{#if game.minPlayTime == game.maxPlayTime}
+								<p class="timeText">{game.minPlayTime}</p>
+							{:else}
+								<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
+							{/if}
+							<img src="/images/players.png" alt="players" class="icon"/>
+							{#if game.minPlayers == game.maxPlayers}
+								<p class="playerText">{game.minPlayers}</p>
+							{:else}
+								<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
+							{/if}
+						</div>
+						<div>
+							{#each game.features as feature}
+								<p class="feature">{feature.name}</p>
+							{/each}
+						</div>
+					</a>
 				</div>
 			</div>
 		{/each}
@@ -177,15 +179,20 @@
 		padding: 1rem;
 		cursor: pointer;
 		display: flex;
+		justify-content: space-evenly;
 		align-items: center;
 		gap: 0.5rem;
 	}
 
-	.gameText {
+	.gameLink {
 		text-decoration: none;
 		color: black;
-		font-size: 1.5rem;
+	}
+
+	.gameText {
 		text-transform: uppercase;
+		font-size: 1.5rem;
+		margin: 0 auto;
 	}
 
 	.gameIcon {

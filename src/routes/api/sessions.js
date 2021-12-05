@@ -1,8 +1,8 @@
 import { getAllGameSessions, insertSession } from '../../sql/sql';
 
 export async function get(request) {
-    const shortName = request.query.get('shortName');
-    return await getAllGameSessions(shortName)
+    const id = request.query.get("id");
+    return await getAllGameSessions(id)
 }
 
 export async function post(request) {

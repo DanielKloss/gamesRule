@@ -12,7 +12,7 @@
 		const resultPlayer = await fetch(`/api/players`);
 		const dataPlayer = await resultPlayer.json();
 	
-		const resultSessions = await fetch(`/api/sessions?shortName=${dataGame.game.shortName}Game`);
+		const resultSessions = await fetch(`/api/sessions?id=${page.params.id}`);
 		const dataSessions = await resultSessions.json();
 
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
@@ -67,14 +67,14 @@
         }
 
         for (const session of sessions) {
-            session.player = players.find(player => player.id == session.id);
-            players.find(p => p.id == session.player.id).games++;
+            session.player = players.find(player => player.playerId == session.playerId);
+            players.find(p => p.playerId == session.player.playerId).games++;
         }
 
         bestScore = Math.max(...sessions.map(s => s.score));
         let allBestScores = sessions.filter(session => session.score == bestScore);
 		for (const score of allBestScores) {
-			if (!bestScores.find(s => s.player.id == score.player.id)){
+			if (!bestScores.find(s => s.player.playerId == score.player.playerId)){
 				bestScores.push(score);
 			}
 		}
@@ -82,7 +82,7 @@
         worstScore = Math.min(...sessions.map(s => s.score));
         let allWorstScores = sessions.filter(session => session.score == worstScore);
 		for (const score of allWorstScores) {
-			if (!worstScores.find(s => s.player.id == score.player.id)){
+			if (!worstScores.find(s => s.player.playerId == score.player.playerId)){
 				worstScores.push(score);
 			}
 		}
@@ -117,11 +117,11 @@
             }
             
             for (const winner of winners) {
-                players.find(p => p.id == winner.id).wins++;
+                players.find(p => p.playerId == winner.playerId).wins++;
             }
 
             for (const loser of losers) {
-                players.find(p => p.id == loser.id).losses++;
+                players.find(p => p.playerId == loser.playerId).losses++;
             }
         }
 
@@ -139,7 +139,7 @@
 
             let totalScore = 0;
 
-            for (const session of sessions.filter(s => s.player.id == player.id)){
+            for (const session of sessions.filter(s => s.player.playerId == player.playerId)){
                 totalScore += session.score;
             }
 
@@ -150,11 +150,11 @@
 			}
         }
 
-		if (worstScore != isFinite()){
+		if (worstScore == isFinite()){
 			worstScore = "No Scores";
 		}
 
-		if (bestScore != isFinite()){
+		if (bestScore == isFinite()){
 			bestScore = "No Scores";
 		}
 

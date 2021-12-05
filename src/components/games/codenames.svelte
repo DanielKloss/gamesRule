@@ -19,8 +19,31 @@
 
     $: teamsSelected = players.find(p => p.team.name == "Red Team") != undefined && players.find(p => p.team.name == "Blue Team") != undefined;
 
-    function submitScores(){
+    async function submitScores(){
+        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 2};
+        const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
+        const dataSession = await resultSession.json();
 
+        if (resultSession.status != 200 ) {
+            console.log(500, "something wrong with the database");
+            return;
+        }
+
+        for (const player of players) {
+            if (player.team != teams[0]){
+                let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.playerId, score: player.team.score};
+                const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
+
+                if (resultPlayerSession.status != 200 ) {
+                    console.log(500, "something wrong with the database");
+                    return;
+                }
+
+                player.selected = false;
+            }
+        }
+
+        players = players;
     }
 </script>
 

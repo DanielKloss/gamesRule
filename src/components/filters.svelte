@@ -3,7 +3,7 @@
     import RangeSlider from "svelte-range-slider-pips";
     const dispatch = createEventDispatcher();
 
-    export let types;
+    export let categories;
     export let mechanics;
 
     export let maxPlayTime;
@@ -12,16 +12,16 @@
     let filters = {
         playTime: [0, maxPlayTime],
         players: [1, maxPlayers],
-        types: [],
+        categories: [],
         mechanics: []
     }
 
-    function AddRemoveType(type){
-        if (filters.types.includes(type)){
-            let index = filters.types.indexOf(type);
-            filters.types.splice(index, 1);
+    function AddRemoveType(category){
+        if (filters.categories.includes(category)){
+            let index = filters.categories.indexOf(category);
+            filters.categories.splice(index, 1);
         } else {
-            filters.types.push(type);
+            filters.categories.push(category);
         }
         dispatch('filtersChanged', filters);
     }
@@ -50,10 +50,10 @@
 
     <h2>Types</h2>
     <div class="checkboxContainer">
-        {#each types as type}
+        {#each categories as cateogry}
             <div> 
-                <input type="checkbox" on:change="{AddRemoveType(type)}"/>
-                <p class="checkboxLabel">{type.name}</p>
+                <input type="checkbox" on:change="{AddRemoveType(cateogry)}"/>
+                <p class="checkboxLabel">{cateogry.name}</p>
             </div>
         {/each}
     </div>
