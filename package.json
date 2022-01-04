@@ -20,6 +20,8 @@
   "type": "module",
   "dependencies": {
     "@jaames/iro": "^5.5.2",
+    "@sveltejs/adapter-node": "^1.0.0-next.55",
+    "@sveltejs/adapter-static": "^1.0.0-next.21",
     "dotenv": "^10.0.0",
     "mysql2": "^2.3.3",
     "svelte-range-slider-pips": "^2.0.0"

@@ -3,6 +3,7 @@ import { getAllGames, getGame, getGameMechanics, getGameCategories, getCategorie
 export async function get(request) {
 	const id = request.query.get("id");
 	const type = request.query.get('type');
+
 	if (id != null) {
 		return await getGame(id);
 	} else if (type == "categories") {

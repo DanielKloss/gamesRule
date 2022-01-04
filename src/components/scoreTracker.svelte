@@ -1,19 +1,41 @@
 <script>
   import { slide } from 'svelte/transition';
 
-    export let name;
-    export let score;
-    export let colour;
-    export let titleVisible;
-    export let minScore;
-    export let maxScore;
+  export let name;
+  export let score;
+  let startScore = score;
+  export let colour;
+  export let titleVisible;
+  export let minScore;
+  export let maxScore;
+  let scoreToAdd = null;
+  let editScore = false;
+
+  function addScore(){ 
+    score += Number(scoreToAdd);
+    editScore = false;
+    scoreToAdd = null;
+	};
+	
+	const onEnter = e => {
+    if (e.charCode === 13){
+			addScore()
+		};
+  };
   </script>
   
 <h1 class="playerName" transition:slide class:hidden={!titleVisible}>{name}</h1>
 <div class="container" transition:slide>
-  <button class="button" class:disabled={minScore == score} style="background-color: {colour}" on:click={()=>{ if(score > minScore) {score--}}}>-</button>
-  <p class="score">{score}</p>
-  <button class="button" class:disabled={maxScore == score} style="background-color: {colour}" on:click={()=>{if(score < maxScore) {score++}}}>+</button>
+  {#if editScore}
+		<button class="button" on:click={()=>{editScore=false; scoreToAdd=null}}>Cancel</button>
+		<input type=text bind:value={scoreToAdd} on:keypress={onEnter} autofocus/>
+		<button class="button" on:click={()=>{addScore()}}>Add</button>
+	{:else}
+		<button class="button" class:disabled={startScore == score} on:click={() => {score = startScore}}>RESET</button>
+		<button class="button" class:disabled={minScore == score} style="background-color: {colour}" on:click={()=>{ if(score > minScore) {score--}}}>-</button>
+		<p class="score" on:click={() => {editScore=true}}>{score}</p>
+		<button class="button" class:disabled={maxScore == score} style="background-color: {colour}" on:click={()=>{if(score < maxScore) {score++}}}>+</button>
+	{/if}
 </div>
 
 <style>

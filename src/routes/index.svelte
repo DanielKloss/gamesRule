@@ -1,20 +1,24 @@
 <script context="module">
 	export async function load ({ fetch }){
-		const gamesResult = await fetch('/api/games');
-		const gamesBody = await gamesResult.json();
-        const games = gamesBody.games;
+		try {
+			const gamesResult = await fetch('/api/games');
+			const gamesBody = await gamesResult.json();
+			const games = gamesBody.games;
 
-		const categoriesResult = await fetch('/api/games?type=categories');
-		const categoriesBody = await categoriesResult.json();
-		const categories = categoriesBody.categories;
+			const categoriesResult = await fetch('/api/games?type=categories');
+			const categoriesBody = await categoriesResult.json();
+			const categories = categoriesBody.categories;
 
-		const mechanicsResult = await fetch('/api/games?type=mechanics');
-		const mechanicsBody = await mechanicsResult.json();
-		const mechanics = mechanicsBody.mechanics;
+			const mechanicsResult = await fetch('/api/games?type=mechanics');
+			const mechanicsBody = await mechanicsResult.json();
+			const mechanics = mechanicsBody.mechanics;
 
-		return {
-			props: { games, categories, mechanics }
-		};
+			return {
+				props: { games, categories, mechanics }
+			};
+		} catch (error) {
+			console.log(error);
+		}
 	}
 </script>
   

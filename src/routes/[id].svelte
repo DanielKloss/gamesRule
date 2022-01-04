@@ -24,7 +24,7 @@
 				}
 			};
 		} else {
-			this.error(200, "something wrong with the database");
+			console.log("something wrong with the database");
 		}
 	}
 </script>
