@@ -43,7 +43,10 @@
 	import LostCities from "../components/games/lostCities.svelte";
 	import Resistance from "../components/games/resistance.svelte";
 	import Tokaido from "../components/games/tokaido.svelte";
-	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido };
+	import CaptainSonar from "../components/games/captainSonar.svelte";
+	import Decrypto from "../components/games/decrypto.svelte";
+	import FormulaD from "../components/games/formulaD.svelte";
+	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido, CaptainSonar, Decrypto, FormulaD };
 
 	export let game;
 	export let players;
