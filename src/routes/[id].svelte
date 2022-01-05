@@ -46,7 +46,8 @@
 	import CaptainSonar from "../components/games/captainSonar.svelte";
 	import Decrypto from "../components/games/decrypto.svelte";
 	import FormulaD from "../components/games/formulaD.svelte";
-	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido, CaptainSonar, Decrypto, FormulaD };
+	import MafiaDeCuba from "../components/games/mafiaDeCuba.svelte";
+	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido, CaptainSonar, Decrypto, FormulaD, MafiaDeCuba };
 
 	export let game;
 	export let players;
