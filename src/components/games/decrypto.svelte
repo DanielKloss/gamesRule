@@ -5,8 +5,8 @@
 
     export let players;
     let hidePlayers = false;
-    let minScore = 0;
-    let maxScore = 1;
+    let minScore = -2;
+    let maxScore = 2;
 
     let teams = [
         {name: "None", colour: "#bbb"},
@@ -22,7 +22,7 @@
     $: teamsSelected = players.find(p => p.team.name == "Black Team") != undefined && players.find(p => p.team.name == "White Team") != undefined;
 
     async function submitScores(){
-        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 13};
+        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 13, coopWin: null};
         const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
         const dataSession = await resultSession.json();
 

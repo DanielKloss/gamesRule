@@ -146,6 +146,7 @@ export async function insertPlayerSession(gameSessionId, playerId, score) {
 
 export async function insertSession(date, gameId, coopWin) {
 	const connection = await getConnection();
-	await connection.query(`INSERT INTO gameSessions (sessionDate, gameId, coopWin) VALUES (?, ?, ?);`, [date, gameId, coopWin]);
+	let result = await connection.query(`INSERT INTO gameSessions (sessionDate, gameId, coopWin) VALUES (?, ?, ?);`, [date, gameId, coopWin]);
 	connection.end();
+	return result;
 }

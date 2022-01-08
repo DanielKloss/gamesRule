@@ -9,12 +9,13 @@ export async function post(request) {
     const date = request.body.date;
     const gameId = request.body.gameId;
     const coopWin = request.body.coopWin;
-    gameSessionId = await insertSession(date, gameId, coopWin);
+    result = await insertSession(date, gameId, coopWin);
+    console.log(result[0]);
     
     return {
         status: 200,
         body: {
-            gameSessionId: gameSessionId[0],
+            gameSessionId: result[0],
             result: "Inserted Session"
         }
     }
