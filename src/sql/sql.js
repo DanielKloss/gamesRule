@@ -12,7 +12,7 @@ async function getConnection() {
 
 export async function getAllGames() {
 	const connection = await getConnection();
-    const rows = await connection.query("SELECT gameId, name, shortName, colour, highScoreWins, minPlayers, maxPlayers, minPlayTime, maxPlayTime FROM games");
+    const rows = await connection.query('SELECT gameId, gameName, gameTypeName, colour, startScore, minScore, maxScore, highScoreWins, oneLoser, minPlayers, maxPlayers, minPlayTime, maxPlayTime FROM games INNER JOIN gameTypes ON games.gameTypeId = gameTypes.gameTypeId');
 	const games = rows[0];
 	connection.end();
     return {
@@ -24,7 +24,10 @@ export async function getAllGames() {
 
 export async function getGame(id) {
 	const connection = await getConnection();
-    const rows = await connection.query("SELECT name, shortName, highScoreWins, colour FROM games WHERE games.gameId = ?;", [id]);
+    const rows = await connection.query(
+			'SELECT gameId, gameName, gameTypeName, colour, startScore, minScore, maxScore, highScoreWins, oneLoser, minPlayers, maxPlayers, minPlayTime, maxPlayTime FROM games INNER JOIN gameTypes ON games.gameTypeId = gameTypes.gameTypeId WHERE games.gameId = ?;',
+			[id]
+		);
 	const game = rows[0][0];
 	connection.end();
     return {
@@ -36,7 +39,7 @@ export async function getGame(id) {
 
 export async function getCategories() {
 	const connection = await getConnection();
-	const rows = await connection.query("SELECT name FROM categories");
+	const rows = await connection.query("SELECT categoryName FROM categories");
 	const categories = rows[0];
 	connection.end();
 	return {
@@ -48,7 +51,7 @@ export async function getCategories() {
 
 export async function getMechanics() {
 	const connection = await getConnection();
-	const rows = await connection.query('SELECT name FROM mechanics');
+	const rows = await connection.query('SELECT mechanicName FROM mechanics');
 	const mechanics = rows[0];
 	connection.end();
 	return {
@@ -60,7 +63,7 @@ export async function getMechanics() {
 
 export async function getGameCategories(gameId) {
 	const connection = await getConnection();
-	const rows = await connection.query("SELECT categories.name FROM games INNER JOIN gameCategories ON games.gameId = gameCategories.gameId INNER JOIN categories ON gameCategories.categoryId = categories.categoryId WHERE games.gameId = ?;", [gameId]);
+	const rows = await connection.query("SELECT categoryName FROM games INNER JOIN gameCategories ON games.gameId = gameCategories.gameId INNER JOIN categories ON gameCategories.categoryId = categories.categoryId WHERE games.gameId = ?;", [gameId]);
 	const gameCategories = rows[0];
 	connection.end();
 	return {
@@ -72,7 +75,7 @@ export async function getGameCategories(gameId) {
 
 export async function getGameMechanics(gameId) {
 	const connection = await getConnection();
-	const rows = await connection.query("SELECT mechanics.name FROM games INNER JOIN gameMechanics ON games.gameId = gameMechanics.gameId INNER JOIN mechanics ON gameMechanics.mechanicId = mechanics.mechanicId WHERE games.gameId = ?;", [gameId]);
+	const rows = await connection.query("SELECT mechanicName FROM games INNER JOIN gameMechanics ON games.gameId = gameMechanics.gameId INNER JOIN mechanics ON gameMechanics.mechanicId = mechanics.mechanicId WHERE games.gameId = ?;", [gameId]);
 	const gameMechanics = rows[0];
 	connection.end();
 	return {
@@ -108,7 +111,7 @@ export async function getRules(id) {
 
 export async function getAllPlayers() {
 	const connection = await getConnection();
-	const rows = await connection.query('SELECT playerId, name, colour FROM players;');
+	const rows = await connection.query('SELECT playerId, playerName, colour FROM players;');
 	const players = rows[0];
 	connection.end();
 	return {
@@ -120,7 +123,7 @@ export async function getAllPlayers() {
 
 export async function insertPlayer(name, colour) {
 	const connection = await getConnection();
-	await connection.query(`INSERT INTO players (name, colour) VALUES (?, ?);`, [name, colour]);
+	await connection.query(`INSERT INTO players (playerName, colour) VALUES (?, ?);`, [name, colour]);
 	connection.end();
 }
 

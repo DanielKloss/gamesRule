@@ -53,7 +53,7 @@
         {#each categories as cateogry}
             <div> 
                 <input type="checkbox" on:change="{AddRemoveType(cateogry)}"/>
-                <p class="checkboxLabel">{cateogry.name}</p>
+                <p class="checkboxLabel">{cateogry.categoryName}</p>
             </div>
         {/each}
     </div>
@@ -62,7 +62,7 @@
         {#each mechanics as mechanic}
             <div>
                 <input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>
-                <p class="checkboxLabel">{mechanic.name}</p>
+                <p class="checkboxLabel">{mechanic.mechanicName}</p>
             </div>
         {/each}
     </div>

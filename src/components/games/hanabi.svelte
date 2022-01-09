@@ -1,6 +1,6 @@
 <script>
-  import Slider from "../imageScoreSlider.svelte";
-  import PlayerSelector from "../playerSelector.svelte";
+  import Slider from "../$lib/scoreComponents/imageScoreSlider.svelte";
+  import PlayerSelector from "../$lib/selectorComponents/playerSelector.svelte";
   import ScoreTracker from "../scoreTracker.svelte";
 
   import { fade } from "svelte/transition";

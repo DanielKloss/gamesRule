@@ -1,7 +1,7 @@
 <script>
   import {fade} from 'svelte/transition';
   import ScoreTracker from "../../components/scoreTracker.svelte";
-  import PlayerSelector from "../../components/playerSelector.svelte";
+  import PlayerSelector from "../$lib/selectorComponents/playerSelector.svelte";
 
   export let players;
   

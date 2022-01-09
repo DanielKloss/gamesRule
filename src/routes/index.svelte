@@ -23,10 +23,10 @@
 </script>
   
 <script>
-	import Tabs from '../components/tabs.svelte';
-	import PlayerCreator from '../components/playerCreator.svelte';
-	import Filter from '../components/filters.svelte';
-	import About from '../components/about.svelte';
+	import Tabs from '$lib/tabs.svelte';
+	import PlayerCreator from '$lib/playerCreator.svelte';
+	import Filter from '$lib/filters.svelte';
+	import About from '$lib/about.svelte';
 
 	export let games;
 	export let categories;
@@ -95,12 +95,20 @@
 	let activeTab = "Filters";
 
 	for (const game of games) {
-		game.features = game.gameCategories.gameCategories.concat(game.gameMechanics.gameMechanics);
+		game.features = [];
+
+		for (const category of game.gameCategories.gameCategories){
+			game.features.push(category.categoryName);
+		}
+
+		for (const category of game.gameMechanics.gameMechanics){
+			game.features.push(category.mechanicName);
+		}
 	}
 
 	games = games.sort(function(a, b) {
-		var gameA = a.name.toUpperCase();
-		var gameB = b.name.toUpperCase();
+		var gameA = a.gameName.toUpperCase();
+		var gameB = b.gameName.toUpperCase();
 		gameA = removeArticles(gameA);
 		gameB = removeArticles(gameB);
 		return (gameA < gameB) ? -1 : (gameA > gameB) ? 1 : 0;
@@ -128,10 +136,10 @@
 	<div class="gamesFlex">
 		{#each filteredGames as game}
 			<div class="game">
-				<img class="gameIcon" src="/images/gameIcons/{game.shortName}.png" alt="{game.shortName} Icon"/>
+				<img class="gameIcon" src="/images/gameIcons/{game.gameName}.png" alt="{game.gameName} Icon"/>
 				<div>
 					<a class="gameLink" href="/{game.gameId}">
-						<p class="gameText">{game.name}</p>
+						<p class="gameText">{game.gameName}</p>
 						<div>
 							<img src="/images/time.png" alt="play time" class="icon"/>
 							{#if game.minPlayTime == game.maxPlayTime}
@@ -148,7 +156,7 @@
 						</div>
 						<div>
 							{#each game.features as feature}
-								<p class="feature">{feature.name}</p>
+								<p class="feature">{feature}</p>
 							{/each}
 						</div>
 					</a>

@@ -2,14 +2,16 @@
   import { slide } from 'svelte/transition';
 
   export let name;
-  export let score;
-  let startScore = score;
+  export let startScore;
+  let score = startScore;
   export let colour;
   export let titleVisible;
   export let minScore;
   export let maxScore;
   let scoreToAdd = null;
   let editScore = false;
+
+  console.log(score);
 
   function addScore(){ 
     score += Number(scoreToAdd);

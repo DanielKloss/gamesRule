@@ -18,7 +18,7 @@
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
 				props:{
-					game: {name: dataGame.game.name, shortName: dataGame.game.shortName, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
+					game: {name: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
 					players: dataPlayer.players,
 					sessions: dataSessions.sessions
 				}
@@ -30,24 +30,12 @@
 </script>
 
 <script>
-	import Rules from '../components/rules.svelte';
-	import Stats from '../components/stats.svelte';
-	import Tabs from '../components/tabs.svelte';
+	import Rules from '$lib/rules.svelte';
+	import Stats from '$lib/stats.svelte';
+	import Tabs from '$lib/tabs.svelte';
 
-	import Hanabi from "../components/games/hanabi.svelte";
-	import ROHOG from "../components/games/ROHOG.svelte";
-	import Bohnanza from "../components/games/bohnanza.svelte";
-	import Codenames from "../components/games/codenames.svelte";
-	import SixNimmt from "../components/games/sixNimmt.svelte";
-	import Pandemic from "../components/games/pandemic.svelte";
-	import LostCities from "../components/games/lostCities.svelte";
-	import Resistance from "../components/games/resistance.svelte";
-	import Tokaido from "../components/games/tokaido.svelte";
-	import CaptainSonar from "../components/games/captainSonar.svelte";
-	import Decrypto from "../components/games/decrypto.svelte";
-	import FormulaD from "../components/games/formulaD.svelte";
-	import MafiaDeCuba from "../components/games/mafiaDeCuba.svelte";
-	let gameComponents = { Hanabi, ROHOG, Bohnanza, Codenames, SixNimmt, Pandemic, LostCities, Resistance, Tokaido, CaptainSonar, Decrypto, FormulaD, MafiaDeCuba };
+	import IndividualScore from "$lib/gameComponents/individualScore.svelte";
+	let gameComponents = {IndividualScore};
 
 	export let game;
 	export let players;
@@ -165,16 +153,12 @@
 		return {bestScore: bestScore, bestScores: bestScores, worstScore: worstScore, worstScores: worstScores, numberOfGames: numberOfGames, mostWins: mostWins, mostWin: mostWin, mostLosses: mostLosses, mostLose: mostLose};
     }
 
-	if(gameComponents[game.shortName]){
-		game.component = gameComponents[game.shortName];
-	}
-
 	let stats = loadStats();
 
 	let tabs = [
 		{name:"Rules", component: Rules, props: {activeGame: game}},
 		{name:"Stats", component: Stats, props: {stats: stats, players: players}},
-		{name:"Record Game", component: game.component, props: {players: players}}
+		{name:"Record Game", component: gameComponents[game.gameType], props: {players: players, game: game}}
   	];
   	let activeTab = "Record Game";
 

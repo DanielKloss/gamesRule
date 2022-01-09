@@ -1,19 +1,20 @@
 <script>
-    import {fade} from 'svelte/transition';
-    import ScoreTracker from "../../components/scoreTracker.svelte";
-    import PlayerSelector from "../../components/playerSelector.svelte";
+    import { fade } from 'svelte/transition';
 
+    import ScoreTracker from "$lib/scoreComponents/scoreTracker.svelte";
+    import PlayerSelector from "$lib/selectorComponents/playerSelector.svelte";
+
+    export let game;
     export let players;
 
-    for (const player of players) {
-        player.score = 0;
-    }
+    console.log(game);
 
     let hidePlayers = false;
-    $: playersSelected = players.filter(p => p.selected).length > 1;
+
+    $: playersSelected = players.filter(p => p.selected).length > game.minPlayers;
 
     async function submitScores(){
-        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 1};
+        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: game.id};
         const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
         const dataSession = await resultSession.json();
 
@@ -24,16 +25,15 @@
 
         for (const player of players) {
             if(player.selected){
-                let playerSession = { game: "bohnanzagame", gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: player.score};
+                let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: player.score};
                 const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
 
                 if (resultPlayerSession.status != 200 ) {
-                    console.log(500, "something wrong with the database");
-                    return;
+                console.log(500, "something wrong with the database");
+                return;
                 }
 
                 player.selected = false;
-                player.score = 0;
             }
         }
         players = players;
@@ -42,20 +42,20 @@
 
 <div class="container">
     <div class="menus">
-        <PlayerSelector bind:hide={hidePlayers} bind:players={players}/>
+        <PlayerSelector bind:hide={hidePlayers} bind:players={players} maxPlayers={game.maxPlayers}/>
     </div>
 
     <div class="scores">
         <div class="sliders">
-        {#each players as player}
-            {#if player.selected}
-                <ScoreTracker name={player.name} bind:score={player.score} colour={player.colour} minScore=0 maxScore=100 titleVisible=true/>
-            {/if}
-        {/each}
+            {#each players as player}
+                {#if player.selected}
+                    <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
+                {/if}
+            {/each}
 
-        {#if playersSelected}
-            <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
-        {/if}
+            {#if playersSelected}
+                <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+            {/if}
         </div>
     </div>
 </div>
@@ -81,23 +81,23 @@
 
     @media (min-width: 650px) {
         .container {
-            flex-direction: row;
-            justify-content: center;
-            margin: 0 auto;
-            width: 75%;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
+        width: 75%;
         }
 
         .scores {
-            flex-basis: 50%;
+        flex-basis: 50%;
         }
 
         .menus {
-            flex-basis: 50%;
+        flex-basis: 50%;
         }
 
         .sliders {
-            margin: 0;
-            width: 100%;
+        margin: 0;
+        width: 100%;
         }
     }
 </style>

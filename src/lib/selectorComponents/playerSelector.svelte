@@ -1,15 +1,19 @@
 <script>
     export let hide;
     export let players;
+    export let maxPlayers;
+
+    $: maxPlayersReached = players.filter(p => p.selected).length == maxPlayers;
 </script>
 
-<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>∨</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
+<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>V</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
 {#if !hide}
     <div class="players">
     {#each players as player}
-        <div class="player" style="--selectedColour: {player.colour}" on:click={() => {player.selected = !player.selected}} class:playerSelected={player.selected === true}>
+        <div class="player" style="--selectedColour: {player.colour}" on:click={() => {if(!maxPlayersReached){player.selected = !player.selected}}}
+            class:playerSelected={player.selected === true} class:playersDisabled={maxPlayersReached}>
             <div class="dot"></div>
-            <p>{player.name}</p>
+            <p>{player.playerName}</p>
         </div>
     {/each}
     </div>
