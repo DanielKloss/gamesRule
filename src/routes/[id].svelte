@@ -18,7 +18,7 @@
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
 				props:{
-					game: {name: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
+					game: {gameId: page.params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
 					players: dataPlayer.players,
 					sessions: dataSessions.sessions
 				}
@@ -35,11 +35,16 @@
 	import Tabs from '$lib/tabs.svelte';
 
 	import IndividualScore from "$lib/gameComponents/individualScore.svelte";
-	let gameComponents = {IndividualScore};
+	import RankedScore from "$lib/gameComponents/rankedScore.svelte";
+	let gameComponents = {IndividualScore, RankedScore};
 
 	export let game;
 	export let players;
 	export let sessions;
+
+	for (const player of players){
+		player.score = game.startScore;
+	}
 
 	function loadStats(){
 		let bestScore;
@@ -87,7 +92,6 @@
 			currentGame.highScoreWins = game.highScoreWins;
 
             let winningScore;
-            let losingScore;
             let winners;
             let losers;
 
@@ -98,14 +102,12 @@
             else {
                 if (currentGame.highScoreWins){
                     winningScore = Math.max(...sessions.filter(s => s.gameSessionId == sessionId).map(s => s.score)); 
-                    losingScore = Math.min(...sessions.filter(s => s.gameSessionId == sessionId).map(s => s.score)); 
                 } else if (!currentGame.highScoreWins) {
                     winningScore = Math.min(...sessions.filter(s => s.gameSessionId == sessionId).map(s => s.score));
-                    losingScore = Math.max(...sessions.filter(s => s.gameSessionId == sessionId).map(s => s.score));
                 }
 
                 winners = sessions.filter(session => session.gameSessionId == sessionId && session.score == winningScore);
-                losers = sessions.filter(session => session.gameSessionId == sessionId && session.score == losingScore);
+				losers = sessions.filter(session => session.gameSessionId == sessionId && session.score != winningScore);
             }
             
             for (const winner of winners) {
@@ -142,11 +144,11 @@
 			}
         }
 
-		if (worstScore == isFinite()){
+		if (!isFinite(worstScore)){
 			worstScore = "No Scores";
 		}
 
-		if (bestScore == isFinite()){
+		if (!isFinite(bestScore)){
 			bestScore = "No Scores";
 		}
 
@@ -160,7 +162,7 @@
 		{name:"Stats", component: Stats, props: {stats: stats, players: players}},
 		{name:"Record Game", component: gameComponents[game.gameType], props: {players: players, game: game}}
   	];
-  	let activeTab = "Record Game";
+  	let activeTab = "Stats";
 
 	let styles = {
 		'primary': game.colour
@@ -172,7 +174,7 @@
 </script>
 
 <svelte:head>
-	<title>{game.name}</title>
+	<title>{game.gameName}</title>
 </svelte:head>
 
 <div style="{cssVarStyles}">
@@ -180,7 +182,7 @@
 		<div class="icons">
 			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
 		</div>
-		<h1 class="title">{game.name}</h1>
+		<h1 class="title">{game.gameName}</h1>
 		<div class="invisibleIcons icons">
 			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
 		</div>

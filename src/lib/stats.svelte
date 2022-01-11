@@ -6,13 +6,13 @@
 <div class="container">
     <div class="statContainer"><span class="statTitle">Number of Games: </span><span class="stat">{stats.numberOfGames}</span></div>
 
-    <div class="statContainer"><span class="statTitle">Best Score: </span><span class="stat">{stats.bestScore} </span>({#each stats.bestScores as score}<span class="statInfo">{score.player.name}</span>{/each})</div>
+    <div class="statContainer"><span class="statTitle">Best Score: </span><span class="stat">{stats.bestScore} </span>({#each stats.bestScores as score}<span class="statInfo">{score.player.playerName}</span>{/each})</div>
 
-    <div class="statContainer"><span class="statTitle">Worst Score: </span><span class="stat">{stats.worstScore} </span>({#each stats.worstScores as score}<span class="statInfo">{score.player.name}</span>{/each})</div>
+    <div class="statContainer"><span class="statTitle">Worst Score: </span><span class="stat">{stats.worstScore} </span>({#each stats.worstScores as score}<span class="statInfo">{score.player.playerName}</span>{/each})</div>
 
-    <div class="statContainer"><span class="statTitle">Most Wins: </span><span class="stat">{stats.mostWin} </span>({#each stats.mostWins as player}<span class="statInfo">{player.name}</span>{/each})</div>
+    <div class="statContainer"><span class="statTitle">Most Wins: </span><span class="stat">{stats.mostWin} </span>({#each stats.mostWins as player}<span class="statInfo">{player.playerName}</span>{/each})</div>
 
-    <div class="statContainer"><span class="statTitle">Most Loses: </span><span class="stat">{stats.mostLose} </span>({#each stats.mostLosses as player}<span class="statInfo">{player.name}</span>{/each})</div>
+    <div class="statContainer"><span class="statTitle">Most Loses: </span><span class="stat">{stats.mostLose} </span>({#each stats.mostLosses as player}<span class="statInfo">{player.playerName}</span>{/each})</div>
 </div>
 
 <div class="playersContainer">
@@ -24,7 +24,7 @@
     <p class="tableStat winP"></p>
     <p class="tableStat average"></p>
     {#each players as player}
-        <p>{player.name}</p>
+        <p>{player.playerName}</p>
         <p class="tableStat">{player.games}</p>
         <p class="tableStat">{player.wins}</p>
         <p class="tableStat">{player.losses}</p>

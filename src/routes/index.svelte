@@ -43,7 +43,7 @@
 
 	function checkGameForCategory(game, filtercategory){
 		for (const category of game.gameCategories.gameCategories){
-			if (filtercategory.name == category.name){
+			if (filtercategory.categoryName == category.categoryName){
 				return true;
 			}
 		}	 
@@ -51,7 +51,7 @@
 
 	function checkGameForMechanic(game, filterMechanic){
 		for (const mechanic of game.gameMechanics.gameMechanics){
-			if (filterMechanic.name == mechanic.name){
+			if (filterMechanic.mechanicName == mechanic.mechanicName){
 				return true;
 			}
 		}	 

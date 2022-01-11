@@ -7,14 +7,12 @@
     export let game;
     export let players;
 
-    console.log(game);
-
     let hidePlayers = false;
 
     $: playersSelected = players.filter(p => p.selected).length > game.minPlayers;
 
     async function submitScores(){
-        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: game.id};
+        let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: game.gameId};
         const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
         const dataSession = await resultSession.json();
 
@@ -25,7 +23,7 @@
 
         for (const player of players) {
             if(player.selected){
-                let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: player.score};
+                let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.playerId, score: player.score};
                 const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
 
                 if (resultPlayerSession.status != 200 ) {
@@ -37,6 +35,7 @@
             }
         }
         players = players;
+        location.reload();
     }
 </script>
 
