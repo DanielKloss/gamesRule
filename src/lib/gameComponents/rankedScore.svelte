@@ -65,7 +65,7 @@
           {/if}
         {/each}
 
-        {#if numberOfPlayerSelected > game.minPlayers}
+        {#if numberOfPlayerSelected >= game.minPlayers}
           <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
         {/if}
     </div>

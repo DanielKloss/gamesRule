@@ -15,10 +15,12 @@
 		const resultSessions = await fetch(`/api/sessions?id=${page.params.id}`);
 		const dataSessions = await resultSessions.json();
 
+		console.log(dataGame.game.teams);
+
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
 				props:{
-					game: {gameId: page.params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
+					game: {gameId: page.params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, teams: dataGame.game.teams, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
 					players: dataPlayer.players,
 					sessions: dataSessions.sessions
 				}
@@ -36,7 +38,8 @@
 
 	import IndividualScore from "$lib/gameComponents/individualScore.svelte";
 	import RankedScore from "$lib/gameComponents/rankedScore.svelte";
-	let gameComponents = {IndividualScore, RankedScore};
+	import TeamScore from "$lib/gameComponents/teamScore.svelte";
+	let gameComponents = {IndividualScore, RankedScore, TeamScore};
 
 	export let game;
 	export let players;
@@ -44,6 +47,10 @@
 
 	for (const player of players){
 		player.score = game.startScore;
+	}
+
+	for (const team of game.teams){
+		team.score = game.startScore;
 	}
 
 	function loadStats(){

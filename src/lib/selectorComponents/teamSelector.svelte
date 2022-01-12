@@ -15,13 +15,13 @@
     }
 </script>
 
-<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>∨</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
+<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>V</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
 {#if !hide}
     <div class="container">
         {#each players as player}
             <div class="player" on:click="{() => changeTeam(player)}">
-                <div class="dot" style="--team: {player.team.colour}"></div>
-                <p class="name">{player.name}</p>
+                <div class="dot" style="--team: {player.team.gameTeamColour}"></div>
+                <p class="name">{player.playerName}</p>
             </div>
         {/each}
     </div>

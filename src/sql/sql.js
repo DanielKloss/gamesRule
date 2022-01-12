@@ -37,6 +37,20 @@ export async function getGame(id) {
     };
 }
 
+export async function getGameTeams(id) {
+	const connection = await getConnection();
+	const rows = await connection.query(
+		'SELECT gameTeamName, gameTeamColour FROM gameTeams WHERE gameId = ?;', [id]
+	);
+	const gameTeam = rows[0];
+	connection.end();
+	return {
+		body: {
+			gameTeam
+		}
+	}
+}
+
 export async function getCategories() {
 	const connection = await getConnection();
 	const rows = await connection.query("SELECT categoryName FROM categories");
