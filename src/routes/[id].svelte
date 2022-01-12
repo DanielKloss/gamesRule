@@ -68,7 +68,14 @@
             players.find(p => p.playerId == session.player.playerId).games++;
         }
 
-        bestScore = Math.max(...sessions.map(s => s.score));
+		if (game.highScoreWins) {
+        	bestScore = Math.max(...sessions.map(s => s.score));
+        	worstScore = Math.min(...sessions.map(s => s.score));
+		} else {
+			bestScore = Math.min(...sessions.map(s => s.score));
+        	worstScore = Math.max(...sessions.map(s => s.score));
+		}
+
         let allBestScores = sessions.filter(session => session.score == bestScore);
 		for (const score of allBestScores) {
 			if (!bestScores.find(s => s.player.playerId == score.player.playerId)){
@@ -76,7 +83,6 @@
 			}
 		}
 
-        worstScore = Math.min(...sessions.map(s => s.score));
         let allWorstScores = sessions.filter(session => session.score == worstScore);
 		for (const score of allWorstScores) {
 			if (!worstScores.find(s => s.player.playerId == score.player.playerId)){

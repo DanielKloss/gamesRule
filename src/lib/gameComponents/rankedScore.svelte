@@ -1,19 +1,31 @@
 <script>
   import {fade} from 'svelte/transition';
-  import ScoreTracker from "../../components/scoreTracker.svelte";
-  import PlayerSelector from "../$lib/selectorComponents/playerSelector.svelte";
+  import ScoreTracker from "$lib/scoreComponents/scoreTracker.svelte";
+  import PlayerSelector from "$lib/selectorComponents/playerSelector.svelte";
 
+  export let game;
   export let players;
-  
-  for (const player of players) {
-    player.score = 0;
-  }
 
   let hidePlayers = false;
-  $: playersSelected = players.filter(p => p.selected).length > 1;
+  $: numberOfPlayerSelected = players.filter(p => p.selected).length;
 
   async function submitScores(){
-    let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: 14};
+    let scores = [];
+    for (const player of players){
+        if (player.selected){
+            if (scores.includes(player.score)){
+                //error message
+                return;
+            } else if (player.score == 0) {
+                //error message
+                return;
+            } else {
+                scores.push(player.score);
+            }
+        }
+    }
+
+    let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: game.gameId};
     const resultSession = await fetch(`/api/sessions`, {method: 'POST', body: JSON.stringify(session), headers: {'Content-Type': 'application/json'}});
     const dataSession = await resultSession.json();
 
@@ -24,7 +36,7 @@
 
     for (const player of players) {
       if(player.selected){
-        let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.id, score: player.score};
+        let playerSession = { gameSessionId: dataSession.gameSessionId.insertId, playerId: player.playerId, score: player.score};
         const resultPlayerSession = await fetch(`/api/playerSessions`, {method: 'POST', body: JSON.stringify(playerSession), headers: {'Content-Type': 'application/json'}});
 
         if (resultPlayerSession.status != 200 ) {
@@ -36,6 +48,7 @@
       }
     }
     players = players;
+    location.reload();
   }
 </script>
 
@@ -48,11 +61,11 @@
       <div class="sliders">
         {#each players as player}
           {#if player.selected}
-            <ScoreTracker name={player.name} bind:score={player.score} colour={player.colour} minScore=0 maxScore={playersSelected+1} titleVisible=true/>
+            <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} minScore=0 maxScore={numberOfPlayerSelected} titleVisible=true/>
           {/if}
         {/each}
 
-        {#if playersSelected}
+        {#if numberOfPlayerSelected > game.minPlayers}
           <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
         {/if}
     </div>
