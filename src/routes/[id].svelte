@@ -1,18 +1,18 @@
 <script context="module">
-	export async function load ({ fetch, page }){
-		const resultGame = await fetch(`/api/games?id=${page.params.id}`);
+	export async function load ({ fetch, params }){
+		const resultGame = await fetch(`/api/games?id=${params.id}`);
 		const dataGame = await resultGame.json();
 
-		const resultRuleSummary = await fetch(`/api/ruleSummaries?id=${page.params.id}`);
+		const resultRuleSummary = await fetch(`/api/ruleSummaries?id=${params.id}`);
 		const dataRuleSummary = await resultRuleSummary.json();
 
-		const resultRule = await fetch(`/api/rules?id=${page.params.id}`);
+		const resultRule = await fetch(`/api/rules?id=${params.id}`);
 		const dataRule = await resultRule.json();
 
 		const resultPlayer = await fetch(`/api/players`);
 		const dataPlayer = await resultPlayer.json();
 	
-		const resultSessions = await fetch(`/api/sessions?id=${page.params.id}`);
+		const resultSessions = await fetch(`/api/sessions?id=${params.id}`);
 		const dataSessions = await resultSessions.json();
 
 		console.log(dataGame.game.teams);
@@ -20,7 +20,7 @@
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
 				props:{
-					game: {gameId: page.params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, teams: dataGame.game.teams, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
+					game: {gameId: params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour:dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, teams: dataGame.game.teams, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
 					players: dataPlayer.players,
 					sessions: dataSessions.sessions
 				}

@@ -1,8 +1,8 @@
 import { getAllGames, getGame, getGameMechanics, getGameCategories, getCategories, getMechanics, getGameTeams } from '../../sql/sql';
 
 export async function get(request) {
-	const id = request.query.get("id");
-	const type = request.query.get('type');
+	const id = request.url.searchParams.get("id");
+	const type = request.url.searchParams.get('type');
 
 	if (id != null) {
 		let game = await getGame(id);
