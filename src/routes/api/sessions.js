@@ -5,12 +5,12 @@ export async function get(request) {
     return await getAllGameSessions(id)
 }
 
-export async function post(request) {
-    const date = request.body.date;
-    const gameId = request.body.gameId;
-    const coopWin = request.body.coopWin;
+export async function post({ request }) {
+    let data = await request.json();
+    const date = data.date;
+    const gameId = data.gameId;
+    const coopWin = data.coopWin;
     result = await insertSession(date, gameId, coopWin);
-    console.log(result[0]);
     
     return {
         status: 200,

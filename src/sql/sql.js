@@ -51,6 +51,21 @@ export async function getGameTeams(id) {
 	}
 }
 
+export async function getGameCoopScores(id) {
+	const connection = await getConnection();
+	const rows = await connection.query(
+		'SELECT gameCoopScoreName, gameCoopScoreColour FROM gameCoopScores WHERE gameId = ?;',
+		[id]
+	);
+	const gameCoopScore = rows[0];
+	connection.end();
+	return {
+		body: {
+			gameCoopScore
+		}
+	};
+}
+
 export async function getCategories() {
 	const connection = await getConnection();
 	const rows = await connection.query("SELECT categoryName FROM categories");

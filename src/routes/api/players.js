@@ -5,8 +5,10 @@ export async function get(request) {
 }
 
 export async function post(request) {
-	const name = request.body.name;
-	const colour = request.body.colour;
+	const data = await request.json();
+
+	const name = data.name;
+	const colour = data.colour;
 	await insertPlayer(name, colour);
 
 	return {

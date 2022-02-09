@@ -1,9 +1,10 @@
 import { insertPlayerSession } from '../../sql/sql';
 
-export async function post(request) {
-    const gameSessionId = request.body.gameSessionId;
-    const playerId = request.body.playerId;
-    const score = request.body.score;
+export async function post({ request }) {
+    const data = await request.json();
+    const gameSessionId = data.gameSessionId;
+    const playerId = data.playerId;
+    const score = data.score;
     await insertPlayerSession(gameSessionId, playerId, score);
     
     return {

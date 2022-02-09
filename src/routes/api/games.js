@@ -1,4 +1,4 @@
-import { getAllGames, getGame, getGameMechanics, getGameCategories, getCategories, getMechanics, getGameTeams } from '../../sql/sql';
+import { getAllGames, getGame, getGameMechanics, getGameCategories, getCategories, getMechanics, getGameTeams, getGameCoopScores } from '../../sql/sql';
 
 export async function get(request) {
 	const id = request.url.searchParams.get("id");
@@ -8,6 +8,8 @@ export async function get(request) {
 		let game = await getGame(id);
 		let gameTeams = await getGameTeams(id);
 		game.body.game.teams = gameTeams.body.gameTeam;
+		let gameCoopScores = await getGameCoopScores(id);
+		game.body.game.coopScores = gameCoopScores.body.gameCoopScore;
 		return game;
 	} else if (type == "categories") {
 		return await getCategories();
