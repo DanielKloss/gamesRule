@@ -2,8 +2,8 @@
     import iro from '@jaames/iro';
     import { onMount } from 'svelte';
 
+    export let players;
     export let playerName;
-    let lastCreated;
     let colourPicker;
 
     onMount(async () => {
@@ -28,55 +28,85 @@
       		return;
     	}
 
-        lastCreated = playerName;
+        players = [...players, {playerName: playerName, colour: colourPicker.color.hexString}];
         playerName = "";
         colourPicker.color.set("#ffffff");
     }
 </script>
 
-<div class="modal-content">
-    <div class="firstRow">
+<div class="creatorContainer">
+    <picker></picker>
+    <div class="otherInputs">
         <input type="text" bind:value="{playerName}" placeholder="Player Name">
         <button on:click="{() => createPlayer()}">Create</button>
     </div>
-    <picker></picker>
-    {#if lastCreated}
-        <p class="creationMessage">{lastCreated} was created</p>
-    {/if}
+</div>
+<div class="playersContainer">
+    {#each players as player}
+        <p class="player" style="--playerColour: {player.colour}">{player.playerName}</p>
+    {/each}
 </div>
 
-
 <style>
-    .modal-content {
+    .creatorContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+		gap: 1rem;
+		font-size: var(--medium);
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin-bottom: 1rem;
+    }
+
+    .playersContainer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+		gap: 1rem;
+		font-size: var(--medium);
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin-bottom: 1rem;
+    }
+
+    .otherInputs {
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 1rem;
     }
 
-    .firstRow {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
     input{
-        border: solid 0.15rem;
-        font-size: 1.2rem;
-        padding: 0.3rem;
-        width: 50%;
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border: none;
+        font-size: var(--large);
+        padding: 0.5rem;
     }
     
     button {
         padding: 0.5rem;
-        border: 0.15rem solid black;
-        font-size: 1.2rem;
+        border: none;
+        background-color: var(--primary);
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--large);
         font-weight: bold;
-        cursor: pointer;
+        text-transform: uppercase;
     }
 
-    .creationMessage{
-        border-bottom: 0.1rem solid black;
-        padding: 0.5rem;
+    .player {
+        font-size: medium;
+        background-color: var(--playerColour);
+        border-radius: var(--radiusSmall);
+        padding: 1rem;
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 </style>

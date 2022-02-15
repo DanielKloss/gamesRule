@@ -7,8 +7,6 @@
     export let game;
     export let players;
 
-    let hidePlayers = false;
-
     $: playersSelected = players.filter(p => p.selected).length >= game.minPlayers;
 
     async function submitScores(){
@@ -41,62 +39,50 @@
 
 <div class="container">
     <div class="menus">
-        <PlayerSelector bind:hide={hidePlayers} bind:players={players} maxPlayers={game.maxPlayers}/>
+        <PlayerSelector bind:players={players} maxPlayers={game.maxPlayers}/>
     </div>
+</div>
 
-    <div class="scores">
-        <div class="sliders">
-            {#each players as player}
-                {#if player.selected}
-                    <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
-                {/if}
-            {/each}
-
-            {#if playersSelected}
-                <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+<div class="container">
+    <div class="scoreContainer">
+        {#each players as player}
+            {#if player.selected}
+            <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
             {/if}
-        </div>
+        {/each}
     </div>
+    {#if playersSelected}
+        <button class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+    {/if}
 </div>
 
 <style>
     .container {
         display: flex;
-        flex-direction: column;
+		flex-direction: column;
+		gap: 1rem;
+		font-size: var(--medium);
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin-bottom: 1rem;
+    }
+
+    .scoreContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
     }
 
     .submitButton {
-        display: block;
-        width:50%;
-        max-width: 300px;
-        margin: 2rem auto;
-        border: 2px solid var(--primary);
-        background: transparent;
-        transform: skewX(-10deg);
-        text-align: center;
-        padding: 0.5rem 0.75rem;
-        font-size: 1.5rem;
-    }
-
-    @media (min-width: 650px) {
-        .container {
-        flex-direction: row;
-        justify-content: center;
-        margin: 0 auto;
-        width: 75%;
-        }
-
-        .scores {
-        flex-basis: 50%;
-        }
-
-        .menus {
-        flex-basis: 50%;
-        }
-
-        .sliders {
-        margin: 0;
-        width: 100%;
-        }
+        padding: 0.5rem;
+        border: none;
+        background-color: var(--primary);
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--large);
+        font-weight: bold;
+        text-transform: uppercase;
     }
 </style>

@@ -1,74 +1,71 @@
 <script>
-    export let hide;
     export let players;
     export let maxPlayers;
 
     $: maxPlayersReached = players.filter(p => p.selected).length == maxPlayers;
+
+    function togglePlayer(player){
+        if (player.selected){
+            player.selected = !player.selected;
+        } else if (!maxPlayersReached){
+            player.selected = !player.selected;
+        }
+        players = [...players];
+    }
 </script>
 
-<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>V</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
-{#if !hide}
-    <div class="players">
-    {#each players as player}
-        <div class="player" style="--selectedColour: {player.colour}" on:click={() => {if(!maxPlayersReached){player.selected = !player.selected}}}
-            class:playerSelected={player.selected === true} class:playersDisabled={maxPlayersReached}>
-            <div class="dot"></div>
-            <p>{player.playerName}</p>
-        </div>
-    {/each}
+<div class="container">
+    <div class="sectionTitle">Players</div>
+    <div class="playersContainer">
+        {#each players as player}
+            <div class="player" style="--selectedColour: {player.colour}" on:click={() => togglePlayer(player)}
+                class:playerSelected={player.selected == true} class:playersDisabled={!player.selected && maxPlayersReached}>
+                {player.playerName}
+            </div>
+        {/each}
     </div>
-{/if}
+</div>
 
 <style>
-    h3, p{
-        margin: 0;
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .sectionTitle {
-        margin: 1rem auto 0.5rem auto;
-        width: 50%;
-        display: flex;
-        gap: 0.5rem;
-        cursor: pointer;
+        padding: 1rem;
         background: var(--primary);
-        transform: skewX(-10deg);
-        padding: 0.25rem 0.5rem;
+        border-radius: var(--radiusLarge);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--extraLarge);
     }
 
-    .players {
+    .playersContainer {
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
-        margin: 0 auto;
-        width: 50%;
-        gap: 0.25rem;
+        align-items: center;
+        justify-content: center;
+		gap: 1rem;
+		font-size: var(--medium);
     }
 
     .player{
-        padding: 0.25rem 0.1rem;
-        cursor: pointer;
-        opacity: 0.4;
-        transition: opacity 0.2s;
-    }
-
-    .player:hover{
-        opacity: 0.7;
-    }
-
-    .dot {
-        height: 25px;
-        width: 25px;
-        background-color: #bbb;
-        border-radius: 50%;
-        display: block;
-        margin: 0 auto;
+        font-size: medium;
+        background-color: #F3F5F8;
+        border-radius: var(--radiusSmall);
+        padding: 1rem;
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
     .playerSelected {
         opacity: 1;
+        background-color: var(--selectedColour);
     }
 
-    .playerSelected > div {
-        background-color: var(--selectedColour);
+    .playersDisabled {
+        opacity: 0.5;
     }
 </style>

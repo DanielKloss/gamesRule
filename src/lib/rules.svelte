@@ -1,32 +1,41 @@
 <script>
-    export let activeGame;
+    export let game;
 </script>
-  
- <ul class="summary">
-  {#each activeGame.ruleSummaries as rule}
-    <li>{rule.ruleSummaryText}</li>
-  {/each}
-</ul>
 
-<ul class="rules">
-  {#each activeGame.rules as rule}
-    <h1 class="ruleHeader">{rule.title}</h1>
-    <p class="rule">{rule.ruleText}</p>
-  {/each}
-</ul> 
+<div class="container">
+  <div class="summary">
+    {#each game.ruleSummaries as rule}
+      <div class="bullet">{rule.ruleSummaryText}</div>
+    {/each}
+  </div>
+
+  <div class="rules">
+    {#each game.rules as rule}
+      <div class="ruleHeader">{rule.title}</div>
+      <div class="rule">{rule.ruleText}</div>
+    {/each}
+  </div>
+</div>
 
 <style>
-  .summary{
-    list-style: none;
-    text-align: center;
+  .container {
+    display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		font-size: var(--medium);
     line-height: 1.75rem;
-    margin: 1rem auto;
-    width: 75%;
-    max-width: 700px;
-    padding: 0;
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 
-  .summary li::before {
+  .summary{
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .summary .bullet::before {
     content: "\25B0";
     color: var(--primary);
     display: inline-block;
@@ -34,26 +43,17 @@
     margin-right: 0.25em;
   }
 
-  .rules{
-    margin: 0 auto;
-    width: 75%;
-    line-height: 1.75rem;
-    padding: 0;
-    max-width: 700px;
-  }
-
   .ruleHeader{
-    font-weight: bold;
-    font-size: 1.25rem;
-    margin-bottom: 0.2rem;
-
     background: var(--primary);
-    padding: 0.5rem 0rem 0.5rem 1rem;
-		transform: skewX(-10deg);
+    border-radius: var(--radiusLarge);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+		padding: 1rem;
+    font-size: var(--large);
+    font-weight: bold;
   }
 
   .rule{
-    margin-top: 0.2rem;
-
+    margin: 1rem 1rem 2rem 1rem;
+    text-align: center;
   }
 </style>

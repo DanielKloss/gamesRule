@@ -18,7 +18,7 @@
 		if (resultGame.status === 200 && resultRuleSummary.status === 200 && resultRule.status === 200 && resultPlayer.status === 200 && resultSessions.status === 200) {
 			return {
 				props:{
-					game: {gameId: params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour: dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, teams: dataGame.game.teams, coopScores: dataGame.game.coopScores, ruleSummaries: [...dataRuleSummary.rulesSummaries], rules: [...dataRule.rules]},
+					game: {gameId: params.id, gameName: dataGame.game.gameName, gameType: dataGame.game.gameTypeName, startScore: dataGame.game.startScore, highScoreWins: dataGame.game.highScoreWins, colour: dataGame.game.colour, highScoreWins: dataGame.game.highScoreWins, oneLoser: dataGame.game.oneLoser, minPlayers: dataGame.game.minPlayers, maxPlayers: dataGame.game.maxPlayers, minPlayTime: dataGame.game.minPlayTime, maxPlayTime: dataGame.game.maxPlayTime, minScore: dataGame.game.minScore, maxScore: dataGame.game.maxScore, teams: dataGame.game.teams, coopScores: dataGame.game.coopScores, ruleSummaries: dataRuleSummary.rulesSummaries, rules: dataRule.rules},
 					players: dataPlayer.players,
 					sessions: dataSessions.sessions
 				}
@@ -30,9 +30,15 @@
 </script>
 
 <script>
+	import TiHome from 'svelte-icons/ti/TiHome.svelte';
+	import IoMdDocument from 'svelte-icons/io/IoMdDocument.svelte';
+	import IoMdStats from 'svelte-icons/io/IoMdStats.svelte';
+	import MdEdit from 'svelte-icons/md/MdEdit.svelte'
+	import FaUserPlus from 'svelte-icons/fa/FaUserPlus.svelte'
+
 	import Rules from '$lib/rules.svelte';
 	import Stats from '$lib/stats.svelte';
-	import Tabs from '$lib/tabs.svelte';
+	import PlayerCreator from '$lib/playerCreator.svelte';
 
 	import IndividualScore from "$lib/gameComponents/individualScore.svelte";
 	import RankedScore from "$lib/gameComponents/rankedScore.svelte";
@@ -173,12 +179,13 @@
 
 	let stats = loadStats();
 
+	let menuSelection = "rules";
+
 	let tabs = [
 		{name:"Rules", component: Rules, props: {activeGame: game}},
 		{name:"Stats", component: Stats, props: {stats: stats, players: players}},
 		{name:"Record Game", component: gameComponents[game.gameType], props: {players: players, game: game}}
   	];
-  	let activeTab = "Stats";
 
 	let styles = {
 		'primary': game.colour
@@ -193,52 +200,131 @@
 	<title>{game.gameName}</title>
 </svelte:head>
 
-<div style="{cssVarStyles}">
-	<div class="header">
-		<div class="icons">
-			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
-		</div>
-		<h1 class="title">{game.gameName}</h1>
-		<div class="invisibleIcons icons">
-			<a href="/"><img src="/images/home.png" alt="home" class="iconButton"/></a>
+<div class="pageContainer" style="{cssVarStyles}">
+	<div class="sidebarContainer">
+		<a class="homeButton" href="/">
+			<div class="icon">
+				<TiHome/>
+			</div>
+			Home
+		</a>
+		<div class="menu">
+			<div class="header">
+				<img class="gameIcon" src="/images/gameIcons/{game.gameName}.png" alt="{game.gameName}"/>
+				<p>{game.gameName}</p>
+			</div>
+			<button class="menuItem" on:click="{() => menuSelection = 'rules'}" class:selectedMenuItem={menuSelection == 'rules'}>
+				<div class="icon" class:selectedIcon={menuSelection == 'rules'}>
+					<IoMdDocument/>
+				</div>
+				Rules
+			</button>
+			<button class="menuItem" on:click="{() => menuSelection = 'stats'}" class:selectedMenuItem={menuSelection == 'stats'}>
+				<div class="icon" class:selectedIcon={menuSelection == 'stats'}>
+					<IoMdStats/>
+				</div>
+				Stats
+			</button>
+			<button class="menuItem" on:click="{() => menuSelection = 'record'}" class:selectedMenuItem={menuSelection == 'record'}>
+				<div class="icon" class:selectedIcon={menuSelection == 'record'}>
+					<MdEdit/>
+				</div>
+				Record Game
+			</button>
+			<button class="menuItem" on:click="{() => menuSelection = 'add'}" class:selectedMenuItem={menuSelection == 'add'}>
+				<div class="icon" class:selectedIcon={menuSelection == 'add'}>
+					<FaUserPlus/>
+				</div>
+				Add Player
+			</button>
 		</div>
 	</div>
-
-	<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail}/>
+	<div>
+		{#if menuSelection=="rules"}
+			<Rules {game}/>
+		{:else if menuSelection=="stats"}
+			<Stats {stats} {players}/>
+		{:else if menuSelection=="record"}
+			<svelte:component this={gameComponents[game.gameType]} {game} {players} />
+		{:else if menuSelection=="add"}
+			<PlayerCreator {players}/>
+		{/if}
+	</div>
 </div>
 
 <style>
+	.pageContainer {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: start;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.sidebarContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.menu {
+		display: flex;
+		flex-direction: column;
+		align-content: flex-start;
+		gap: 1rem;
+		border-radius: var(--radiusLarge);
+		padding: 2rem 2rem 5rem 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	}
+
 	.header {
 		display: flex;
-		margin: 1rem 0;
+		gap: 1rem;
 		align-items: center;
-		align-content: center;
-		text-align: center;
+		font-size: var(--extraLarge);
 	}
 
-	.title {
-		text-align: center;
-		background: var(--primary);
-		width: 50%;
-		max-width: 600px;
-		margin: 0 auto;
-		transform: skewX(-10deg); 
-		font-size: 2.5rem;
-		padding: 1rem 1rem;
+	.menuItem {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		border: none;
+		background-color: transparent;
+		color: black;
+		font-size: var(--large);
+		padding: 0.5rem;
 	}
 
-	.icons {
-		margin-left: 3rem;
+	.homeButton {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		font-size: var(--large);
+		text-decoration: none;
+		color: black;
+		border-radius: var(--radiusLarge);
+		padding: 1rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	}
 
-	.iconButton {
+	.selectedMenuItem {
+		background-color: var(--primary);
+		border-radius: var(--radiusSmall);
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	}
+
+	.gameIcon {
+		height: calc(var(--extraLarge)*2);
+	}
+
+	.icon {
 		color: var(--primary);
-		text-align: center;
-		cursor: pointer;
-		height: 2rem;
+		width: var(--extraLarge);
 	}
 
-	.invisibleIcons {
-		visibility: hidden;
+	.selectedIcon {
+		color: black;
 	}
 </style>
