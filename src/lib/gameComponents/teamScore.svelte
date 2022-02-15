@@ -7,6 +7,8 @@
     export let players;
     let hidePlayers = false;
 
+    let newTeamName;
+
     let noneTeam = {gameTeamName:"None", gameTeamColour:"#bbb"};
     game.teams.push(noneTeam);
 
@@ -15,6 +17,10 @@
     }
 
     $: noTeamsSelected = players.filter(p => p.team.gameTeamName != "None");
+
+    function addTeam(){
+        game.teams = [...game.teams, {gameTeamName: newTeamName, gameTeamColour: "red"}];
+    }
 
     async function submitScores(){
         let session = { date: new Date().toJSON().slice(0, 10).toString(), gameId: game.gameId};
@@ -43,12 +49,15 @@
         players = players;
         location.reload();
     }
+
+    console.log(game);
 </script>
 
 <TeamSelector bind:players={players} teams={game.teams} bind:hide={hidePlayers}/>
 
 {#if game.teams[0].gameTeamName == "unlimited"}
-    <button>Add Team</button>
+    <button on:click="{() => addTeam()}">Add Team</button>
+    <input type="text" bind:value="{newTeamName}" placeholder="New Team Name"/>
 {/if}
 
 {#each game.teams as team}

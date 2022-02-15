@@ -4,7 +4,7 @@ export async function get(request) {
 	return await getAllPlayers();
 }
 
-export async function post(request) {
+export async function post({ request }) {
 	const data = await request.json();
 
 	const name = data.name;

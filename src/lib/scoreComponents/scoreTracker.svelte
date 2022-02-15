@@ -10,6 +10,7 @@
   export let maxScore;
   let scoreToAdd = null;
   let editScore = false;
+  score = startScore;
 
   function addScore(){ 
     score += Number(scoreToAdd);
@@ -22,6 +23,8 @@
 			addScore()
 		};
   };
+
+  console.log(startScore)
   </script>
   
 <h1 class="playerName" transition:slide class:hidden={!titleVisible}>{name}</h1>

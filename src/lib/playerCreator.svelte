@@ -37,7 +37,7 @@
 <div class="modal-content">
     <div class="firstRow">
         <input type="text" bind:value="{playerName}" placeholder="Player Name">
-        <button on:click="{createPlayer}">Create</button>
+        <button on:click="{() => createPlayer()}">Create</button>
     </div>
     <picker></picker>
     {#if lastCreated}
