@@ -37,43 +37,67 @@
     }
 </script>
 
-<div class="modal-content">
-    <h2>Play Time</h2>
-    <div class="sliderContainer">
-        <RangeSlider range float pips step={5} bind:values={filters.playTime} min={0} max={maxPlayTime} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+<div class="filtersContainer">
+    <p class="filterTitle">Filters</p>
+
+    <div class="filterContainer">
+        <p class="filterTitle">Play Time</p>
+        <div class="sliderContainer">
+            <RangeSlider range float pips step={5} bind:values={filters.playTime} min={0} max={maxPlayTime} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+        </div>
     </div>
 
-    <h2>Players</h2>
-    <div class="sliderContainer">
-        <RangeSlider range float pips step={1} bind:values={filters.players} min={1} max={maxPlayers} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+    <div class="filterContainer">
+        <p class="filterTitle">Players</p>
+        <div class="sliderContainer">
+            <RangeSlider range float pips step={1} bind:values={filters.players} min={1} max={maxPlayers} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+        </div>
     </div>
 
-    <h2>Types</h2>
-    <div class="checkboxContainer">
-        {#each categories as cateogry}
-            <div> 
-                <input type="checkbox" on:change="{AddRemoveType(cateogry)}"/>
-                <p class="checkboxLabel">{cateogry.categoryName}</p>
-            </div>
-        {/each}
+    <div class="filterContainer">
+        <p class="filterTitle">Types</p>
+        <div class="checkboxContainer">
+            {#each categories as cateogry}
+                <div> 
+                    <input type="checkbox" on:change="{AddRemoveType(cateogry)}"/>
+                    <p class="checkboxLabel">{cateogry.categoryName}</p>
+                </div>
+            {/each}
+        </div>
     </div>
-    <h2>Mechanics</h2>
-    <div class="checkboxContainer">
-        {#each mechanics as mechanic}
-            <div>
-                <input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>
-                <p class="checkboxLabel">{mechanic.mechanicName}</p>
-            </div>
-        {/each}
+
+    <div class="filterContainer">
+        <p class="filterTitle">Mechanics</p>
+        <div class="checkboxContainer">
+            {#each mechanics as mechanic}
+                <div>
+                    <input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>
+                    <p class="checkboxLabel">{mechanic.mechanicName}</p>
+                </div>
+            {/each}
+        </div>
     </div>
 </div>
 
 <style>
-    .modal-content {
+    .filtersContainer {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        margin: 0 auto;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .filterContainer{
+        border-radius: var(--radiusLarge);
+		padding: 1rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .filterTitle {
+		font-size: var(--large);
+        font-weight: bold;
+        margin: 0 0 0.5rem 0.5rem;
     }
 
     .checkboxLabel {
@@ -85,6 +109,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
+        margin-top: 1rem;
     }
 
     .sliderContainer {

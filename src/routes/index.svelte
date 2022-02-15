@@ -23,10 +23,7 @@
 </script>
   
 <script>
-	import Tabs from '$lib/tabs.svelte';
-	import PlayerCreator from '$lib/playerCreator.svelte';
 	import Filter from '$lib/filters.svelte';
-	import About from '$lib/about.svelte';
 
 	export let games;
 	export let categories;
@@ -87,13 +84,6 @@
 	let maxPlayTime = games.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;
 	let maxPlayers = games.reduce(function(max, game) { return game.maxPlayers > max.maxPlayers? game : max; }).maxPlayers;
 
-	let tabs = [
-		{name:"Add", component: PlayerCreator, props: {}},
-		{name:"Filters", component: Filter, props: {categories : categories, mechanics: mechanics, maxPlayTime: maxPlayTime, maxPlayers: maxPlayers}},
-		{name:"About", component: About, props:{}}
-	];
-	let activeTab = "Filters";
-
 	for (const game of games) {
 		game.features = [];
 
@@ -126,109 +116,107 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Games Rule</title>
 </svelte:head>
 
 <div class="pageFlex" style="{cssVarStyles}">
-	<div class="tabsContainer">
-		<Tabs {tabs} {activeTab} on:tabChange={(e) => activeTab = e.detail} on:filtersChanged={(e) => updateFilters(e.detail.detail)}/>
+	<div class="filterContainer">
+		<Filter {categories} {mechanics} {maxPlayTime} {maxPlayers} on:filtersChanged={(e) => updateFilters(e.detail.detail)}/>
 	</div>
-	<div class="gamesFlex">
+	<div class="divider"/>
+	<div class="gamesContainer">
 		{#each filteredGames as game}
-			<div class="game">
-				<img class="gameIcon" src="/images/gameIcons/{game.gameName}.png" alt="{game.gameName} Icon"/>
+			<a class="game" href="/{game.gameId}">
+				<img class="gameIcon" src="/images/gameIcons/{game.gameName}.png" alt="{game.gameName}"/>
+				<p class="gameTitle">{game.gameName}</p>
 				<div>
-					<a class="gameLink" href="/{game.gameId}">
-						<p class="gameText">{game.gameName}</p>
-						<div>
-							<img src="/images/time.png" alt="play time" class="icon"/>
-							{#if game.minPlayTime == game.maxPlayTime}
-								<p class="timeText">{game.minPlayTime}</p>
-							{:else}
-								<p class="timeText">{game.minPlayTime} - {game.maxPlayTime}</p>
-							{/if}
-							<img src="/images/players.png" alt="players" class="icon"/>
-							{#if game.minPlayers == game.maxPlayers}
-								<p class="playerText">{game.minPlayers}</p>
-							{:else}
-								<p class="playerText">{game.minPlayers} - {game.maxPlayers}</p>
-							{/if}
-						</div>
-						<div>
-							{#each game.features as feature}
-								<p class="feature">{feature}</p>
-							{/each}
-						</div>
-					</a>
+					<img src="/images/time.png" alt="play time" class="icon"/>
+					{#if game.minPlayTime == game.maxPlayTime}
+						<p class="detailText">{game.minPlayTime}</p>
+					{:else}
+						<p class="detailText">{game.minPlayTime} - {game.maxPlayTime}</p>
+					{/if}
+					<img src="/images/players.png" alt="players" class="icon"/>
+					{#if game.minPlayers == game.maxPlayers}
+						<p class="detailText">{game.minPlayers}</p>
+					{:else}
+						<p class="detailText">{game.minPlayers} - {game.maxPlayers}</p>
+					{/if}
 				</div>
-			</div>
+				<div class="features">
+					{#each game.features as feature}
+						<p class="feature">{feature}</p>
+					{/each}
+				</div>
+			</a>
 		{/each}
 	</div>
 </div>
 
 <style>
 	.pageFlex {
-		display: flex;
+		display: grid;
+		grid-template-columns: auto auto 1fr;
+		gap: 1rem;
 	}
 
-	.tabsContainer {
+	.filterContainer {
+	}
+
+	.divider {
 		border-right: 0.25rem solid black;
 	}
 
-	.gamesFlex {
-		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		grid-auto-rows: max-content;
-		margin-left: 1rem;
-		gap: 0.5rem;
-		text-align: center;
+	.gamesContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	.game {
-		background: var(--primary);
-		border: black 2px solid;
-		padding: 1rem;
-		cursor: pointer;
-		display: flex;
-		justify-content: space-evenly;
+		display: grid;
+		grid-template-columns: auto 1.25fr 1fr 1fr;
+		gap: 1rem;
 		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.gameLink {
 		text-decoration: none;
 		color: black;
+		border-radius: var(--radiusLarge);
+		padding: 0.5rem 1rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	}
 
-	.gameText {
+	.gameTitle {
 		text-transform: uppercase;
-		font-size: 1.5rem;
-		margin: 0 auto;
+		font-size: var(--extraLarge);
 	}
 
 	.gameIcon {
-		height: 5rem;
+		height: calc(var(--extraLarge)*2.25);
+	}
+
+	.features {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: end;
 	}
 
 	.feature {
-		display: inline;
-		margin-right: 0.1rem;
+		font-size: var(--medium);
+		background-color: #F3F5F8;
+		border-radius: var(--radiusSmall);
+		padding: 0.5rem;
+		margin: 0;
 	}
-
-	.feature:after { content: ", "; }
-	.feature:last-child:after { content: ""; }
 
 	.icon {
-		height: 1rem;
+		width: 1rem;
 	}
 
-	.timeText {
+	.detailText {
 		display: inline;
 		margin-right: 1rem;
-	}
-
-	.playerText {
-		display: inline;
+		font-size: var(--large);
 	}
 </style>

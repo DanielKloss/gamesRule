@@ -10,12 +10,26 @@
 }
 
 body {
-  margin: 0;
+  margin: 0px;
   font-family: 'Ubuntu', sans-serif;
-  padding: 1rem;
+  padding: 0px;
+  background-color: #F3F5F8;
 }
 
 :root{
   --primary: #919191;
   --background: #C6C6C6;
+
+  --hue: 220;
+  --accent1: var(--hue) 43.6% 57.5%;
+  --accent2: var(--hue) 71.4% 95.9%;
+
+  --extraLarge: 1.777rem;
+  --large: 1.333rem;
+  --normal: 1rem;
+  --small: 0.75rem;
+  --extraSmall: 0.563rem; 
+
+  --radiusSmall: 5px;
+  --radiusLarge: 15px;
 }
