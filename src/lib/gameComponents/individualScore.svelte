@@ -1,6 +1,4 @@
 <script>
-    import { fade } from 'svelte/transition';
-
     import ScoreTracker from "$lib/scoreComponents/scoreTracker.svelte";
     import PlayerSelector from "$lib/selectorComponents/playerSelector.svelte";
 
@@ -47,7 +45,7 @@
     <div class="scoreContainer">
         {#each players as player}
             {#if player.selected}
-            <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
+            <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} bigScores={true}/>
             {/if}
         {/each}
     </div>

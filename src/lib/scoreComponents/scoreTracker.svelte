@@ -5,6 +5,7 @@
   export let colour;
   export let minScore;
   export let maxScore;
+  export let bigScores;
   let scoreToAdd = null;
   let editScore = false;
   score = startScore;
@@ -25,7 +26,7 @@
 <div class="container">
   <p class="playerName">{name}</p>
   <div class="scoreContainer">
-    {#if editScore}
+    {#if editScore && bigScores}
       <button class="button" on:click={()=>{minusScore()}}>-</button>
       <!-- svelte-ignore a11y-autofocus -->
       <input class="scoreInput" type=number bind:value={scoreToAdd} autofocus/>
@@ -77,6 +78,7 @@
     font-size: var(--large);
     text-align: center;
     margin: 0;
+    text-transform: capitalize;
   }
 
   .disabled{

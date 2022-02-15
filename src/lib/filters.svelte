@@ -38,8 +38,6 @@
 </script>
 
 <div class="filtersContainer">
-    <p class="filterTitle">Filters</p>
-
     <div class="filterContainer">
         <p class="filterTitle">Play Time</p>
         <div class="sliderContainer">

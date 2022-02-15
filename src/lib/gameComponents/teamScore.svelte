@@ -49,38 +49,57 @@
         players = players;
         location.reload();
     }
-
-    console.log(game);
 </script>
 
-<TeamSelector bind:players={players} teams={game.teams} bind:hide={hidePlayers}/>
-
-{#if game.teams[0].gameTeamName == "unlimited"}
-    <button on:click="{() => addTeam()}">Add Team</button>
-    <input type="text" bind:value="{newTeamName}" placeholder="New Team Name"/>
-{/if}
-
-{#each game.teams as team}
-    {#if team.gameTeamName != "unlimited" && team.gameTeamName != "None"}
-        <ScoreTracker name={team.gameTeamName} bind:score={team.score} colour={team.gameTeamColour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
+<div class="container">
+    <TeamSelector bind:players={players} teams={game.teams} maxPlayers={game.maxPlayers} bind:hide={hidePlayers}/>
+</div>
+<div class="container">
+    {#if game.teams[0].gameTeamName == "unlimited"}
+        <button on:click="{() => addTeam()}">Add Team</button>
+        <input type="text" bind:value="{newTeamName}" placeholder="New Team Name"/>
     {/if}
-{/each}
 
-{#if noTeamsSelected.length >= game.minPlayers}
-    <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
-{/if}
+    <div class="scoreContainer">
+    {#each game.teams as team}
+        {#if team.gameTeamName != "unlimited" && team.gameTeamName != "None"}
+            <ScoreTracker name={team.gameTeamName} bind:score={team.score} colour={team.gameTeamColour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
+        {/if}
+    {/each}
+    </div>
+
+    {#if noTeamsSelected.length >= game.minPlayers}
+        <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+    {/if}
+</div>
 
 <style>
+    .container {
+        display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		font-size: var(--medium);
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin-bottom: 1rem;
+    }
+
+    .scoreContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
     .submitButton {
-        display: block;
-        width:50%;
-        max-width: 300px;
-        margin: 2rem auto;
-        border: 2px solid var(--primary);
-        background: transparent;
-        transform: skewX(-10deg);
-        text-align: center;
-        padding: 0.5rem 0.75rem;
-        font-size: 1.5rem;
+        padding: 0.5rem;
+        border: none;
+        background-color: var(--primary);
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--large);
+        font-weight: bold;
+        text-transform: uppercase;
     }
 </style>

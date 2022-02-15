@@ -49,13 +49,13 @@
 </script>
 
 <div class="container">
-    <div class="menus">
-        <PlayerSelector bind:hide={hidePlayers} bind:players={players} maxPlayers={game.maxPlayers}/>
-    </div>
+    <PlayerSelector bind:hide={hidePlayers} bind:players={players} maxPlayers={game.maxPlayers}/>
 
+    <div class="scoreContainer">
     {#each game.coopScores as coopScore}
         <ScoreTracker name={coopScore.gameCoopScoreName} bind:score={coopScore.score} colour={coopScore.gameCoopScoreColour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
     {/each}
+    </div>
 
     {#if playersSelected}
         <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
@@ -65,19 +65,30 @@
 <style>
     .container {
         display: flex;
-        flex-direction: column;
+		flex-direction: column;
+		gap: 1rem;
+		font-size: var(--medium);
+		border-radius: var(--radiusLarge);
+		padding: 2rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        margin-bottom: 1rem;
+    }
+
+    .scoreContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
     }
 
     .submitButton {
-        display: block;
-        width:50%;
-        max-width: 300px;
-        margin: 2rem auto;
-        border: 2px solid var(--primary);
-        background: transparent;
-        transform: skewX(-10deg);
-        text-align: center;
-        padding: 0.5rem 0.75rem;
-        font-size: 1.5rem;
+        padding: 0.5rem;
+        border: none;
+        background-color: var(--primary);
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--large);
+        font-weight: bold;
+        text-transform: uppercase;
     }
 </style>

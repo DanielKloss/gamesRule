@@ -1,65 +1,71 @@
 <script>
     export let players;
+    export let maxPlayers;
     export let teams;
 
-    export let hide;
+    $: maxPlayersReached = players.filter(p => p.team.gameTeamName != "None").length == maxPlayers;
 
     function changeTeam(player){
-        let teamPosition = teams.indexOf(player.team);
-        if (teamPosition == teams.length-1){
-            player.team = teams[0];
-        } else {
-            player.team = teams[++teamPosition];
+        if (!maxPlayersReached || player.gameTeamName != "None"){
+            let teamPosition = teams.indexOf(player.team);
+            if (teamPosition == teams.length-1){
+                player.team = teams[0];
+            } else {
+                player.team = teams[++teamPosition];
+            }
+            players = [...players];
         }
-        players = players;
+        console.log(players.filter(p => p.team.gameTeamName != "None").length, maxPlayers, maxPlayersReached);
     }
 </script>
 
-<div class="sectionTitle" on:click={() => {hide = !hide}}>{#if hide}<h3>V</h3>{:else}<h3>∧</h3>{/if}<h3>Players</h3></div>
-{#if !hide}
-    <div class="container">
-        {#each players as player}
-            <div class="player" on:click="{() => changeTeam(player)}">
-                <div class="dot" style="--team: {player.team.gameTeamColour}"></div>
-                <p class="name">{player.playerName}</p>
-            </div>
-        {/each}
+<div class="container">
+    <div class="sectionTitle">Players</div>
+    <div class="playersContainer">
+    {#each players as player}
+        <div class="player" style="background-color: {player.team.gameTeamColour}" class:playersDisabled={player.team.gameTeamName == "None" && maxPlayersReached}
+            on:click="{() => changeTeam(player)}">
+            {player.playerName}
+        </div>
+    {/each}
     </div>
-{/if}
+</div>
 
 <style>
-    p, h3 {
-        margin: 0;
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .sectionTitle {
-        margin: 1rem auto 0.5rem auto;
-        width: 50%;
-        display: flex;
-        gap: 0.5rem;
-        cursor: pointer;
+        padding: 1rem;
         background: var(--primary);
-        transform: skewX(-10deg);
-        padding: 0.25rem 0.5rem;
+        border-radius: var(--radiusLarge);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        font-size: var(--extraLarge);
     }
 
-    .player {
+    .playersContainer {
         display: flex;
-        justify-content: center;
+        flex-wrap: wrap;
         align-items: center;
-        margin: 1rem auto;
-        width: 50%;
-    }
-    .dot {
-        height: 25px;
-        width: 25px;
-        background-color: var(--team);
-        border-radius: 50%;
-        flex: 0 0 25px;
+        justify-content: center;
+		gap: 1rem;
+		font-size: var(--medium);
     }
 
-    .name {
-        flex: 1;
-        margin-left: 1rem;
+    .player{
+        font-size: medium;
+        background-color: #F3F5F8;
+        border-radius: var(--radiusSmall);
+        padding: 1rem;
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .playersDisabled {
+        opacity: 0.5;
     }
 </style>
