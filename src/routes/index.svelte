@@ -55,6 +55,7 @@
 	}
 
 	function updateFilters(filters) {
+		console.log(filters)
 		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime[1] && game.maxPlayTime >= filters.playTime[0]);
 		filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players[0] && game.minPlayers <= filters.players[1]);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
@@ -121,7 +122,7 @@
 
 <div class="pageFlex" style="{cssVarStyles}">
 	<div class="filterContainer">
-		<Filter {categories} {mechanics} {maxPlayTime} {maxPlayers} on:filtersChanged={(e) => updateFilters(e.detail.detail)}/>
+		<Filter {categories} {mechanics} {maxPlayTime} {maxPlayers} on:filtersChanged={(e) => updateFilters(e.detail)}/>
 	</div>
 	<div class="divider"/>
 	<div class="gamesContainer">
@@ -158,9 +159,6 @@
 		display: grid;
 		grid-template-columns: auto auto 1fr;
 		gap: 1rem;
-	}
-
-	.filterContainer {
 	}
 
 	.divider {
