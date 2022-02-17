@@ -23,6 +23,8 @@
 </script>
   
 <script>
+	import IoIosTime from 'svelte-icons/io/IoIosTime.svelte'
+	import FaUsers from 'svelte-icons/fa/FaUsers.svelte'
 	import Filter from '$lib/filters.svelte';
 
 	export let games;
@@ -130,19 +132,23 @@
 			<a class="game" href="/{game.gameId}">
 				<img class="gameIcon" src="/images/gameIcons/{game.gameName}.png" alt="{game.gameName}"/>
 				<p class="gameTitle">{game.gameName}</p>
-				<div>
-					<img src="/images/time.png" alt="play time" class="icon"/>
-					{#if game.minPlayTime == game.maxPlayTime}
-						<p class="detailText">{game.minPlayTime}</p>
-					{:else}
-						<p class="detailText">{game.minPlayTime} - {game.maxPlayTime}</p>
-					{/if}
-					<img src="/images/players.png" alt="players" class="icon"/>
-					{#if game.minPlayers == game.maxPlayers}
-						<p class="detailText">{game.minPlayers}</p>
-					{:else}
-						<p class="detailText">{game.minPlayers} - {game.maxPlayers}</p>
-					{/if}
+				<div class="detailContainer">
+					<div class="playTimeContainer">
+						<div class="icon"><IoIosTime/></div>
+						{#if game.minPlayTime == game.maxPlayTime}
+							<p class="detailText">{game.minPlayTime}</p>
+						{:else}
+							<p class="detailText">{game.minPlayTime} - {game.maxPlayTime}</p>
+						{/if}
+					</div>
+					<div class="playTimeContainer">
+						<div class="icon"><FaUsers/></div>
+						{#if game.minPlayers == game.maxPlayers}
+							<p class="detailText">{game.minPlayers}</p>
+						{:else}
+							<p class="detailText">{game.minPlayers} - {game.maxPlayers}</p>
+						{/if}
+					</div>
 				</div>
 				<div class="features">
 					{#each game.features as feature}
@@ -173,7 +179,7 @@
 
 	.game {
 		display: grid;
-		grid-template-columns: auto 1.25fr 1fr 1fr;
+		grid-template-columns: auto 1.5fr 0.5fr 1fr;
 		gap: 1rem;
 		align-items: center;
 		text-decoration: none;
@@ -193,6 +199,17 @@
 		height: calc(var(--extraLarge)*2.25);
 	}
 
+	.detailContainer {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.playTimeContainer {
+		display: flex;
+		align-items: center;
+	}
+
 	.features {
 		display: flex;
 		flex-wrap: wrap;
@@ -209,12 +226,11 @@
 	}
 
 	.icon {
-		width: 1rem;
+		height: 1.5rem;
 	}
 
 	.detailText {
-		display: inline;
-		margin-right: 1rem;
+		margin: 0 0 0 1rem;
 		font-size: var(--large);
 	}
 </style>
