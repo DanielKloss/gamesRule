@@ -255,7 +255,7 @@
 <style>
 	.pageContainer {
 		display: grid;
-		grid-template-columns: auto 1fr;
+		grid-template-columns: minmax(auto, 0.5fr) 1fr;
 		align-items: start;
 		gap: 1rem;
 		margin-bottom: 1rem;
