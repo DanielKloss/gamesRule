@@ -10,7 +10,8 @@ export async function post({ request }) {
     const date = data.date;
     const gameId = data.gameId;
     const coopWin = data.coopWin;
-    result = await insertSession(date, gameId, coopWin);
+
+    let result = await insertSession(date, gameId, coopWin);
     
     return {
         status: 200,
