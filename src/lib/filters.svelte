@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import RangeSlider from "svelte-range-slider-pips";
+    import IoIosArrowBack from 'svelte-icons/io/IoIosArrowBack.svelte'
+    import IoIosArrowForward from 'svelte-icons/io/IoIosArrowForward.svelte'
     const dispatch = createEventDispatcher();
 
     export let categories;
@@ -10,8 +11,8 @@
     export let maxPlayers;
 
     let filters = {
-        playTime: [0, maxPlayTime],
-        players: [1, maxPlayers],
+        playTime: maxPlayTime,
+        players: maxPlayers,
         categories: [],
         mechanics: []
     }
@@ -41,14 +42,18 @@
     <div class="filterContainer">
         <p class="filterTitle">Play Time</p>
         <div class="sliderContainer">
-            <RangeSlider range float pips step={5} bind:values={filters.playTime} min={0} max={maxPlayTime} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+            <button class="iconButton" class:disabled="{filters.playTime == 5}" on:click="{() => {if(filters.playTime > 5){filters.playTime-=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
+            <input type="number" class="spinner" bind:value={filters.playTime} on:click="{() => filters.playTime = ""}" on:change="{dispatch('filtersChanged', filters)}"/>
+            <button class="iconButton" class:disabled="{filters.playTime == maxPlayTime}" on:click="{() => {if(filters.playTime < maxPlayTime){filters.playTime+=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
 
     <div class="filterContainer">
         <p class="filterTitle">Players</p>
         <div class="sliderContainer">
-            <RangeSlider range float pips step={1} bind:values={filters.players} min={1} max={maxPlayers} first='label' last='label' on:change="{dispatch('filtersChanged', filters)}"/>
+            <button class="iconButton" class:disabled="{filters.players == 1}" on:click="{() => {if(filters.players > 1){filters.players--; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
+            <input type="number" class="spinner" bind:value={filters.players} on:click="{() => filters.players = ""}" on:change="{dispatch('filtersChanged', filters)}"/>
+            <button class="iconButton" class:disabled="{filters.players == maxPlayers}" on:click="{() => {if(filters.players < maxPlayers){filters.players++; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
 
@@ -112,7 +117,25 @@
 
     .sliderContainer {
         display: flex;
-        flex-direction: column;
-        align-self: stretch;
+        justify-content: center;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .spinner {
+        width: 2rem;
+        text-align: center;
+    }
+
+    .iconButton {
+        width: var(--extraLarge);
+        padding: 0.5rem;
+        border: none;
+        border-radius: var(--radiusSmall);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .disabled {
+        visibility: hidden;
     }
 </style>

@@ -54,7 +54,6 @@
 <div class="container">
     <TeamSelector bind:players={players} teams={game.teams} maxPlayers={game.maxPlayers} bind:hide={hidePlayers}/>
 </div>
-<div class="container">
     {#if game.teams[0].gameTeamName == "unlimited"}
         <button on:click="{() => addTeam()}">Add Team</button>
         <input type="text" bind:value="{newTeamName}" placeholder="New Team Name"/>
@@ -71,7 +70,6 @@
     {#if noTeamsSelected.length >= game.minPlayers}
         <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
     {/if}
-</div>
 
 <style>
     .container {

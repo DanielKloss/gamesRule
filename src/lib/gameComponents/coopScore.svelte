@@ -50,17 +50,17 @@
 
 <div class="container">
     <PlayerSelector bind:hide={hidePlayers} bind:players={players} maxPlayers={game.maxPlayers}/>
-
-    <div class="scoreContainer">
-    {#each game.coopScores as coopScore}
-        <ScoreTracker name={coopScore.gameCoopScoreName} bind:score={coopScore.score} colour={coopScore.gameCoopScoreColour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
-    {/each}
-    </div>
-
-    {#if playersSelected}
-        <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
-    {/if}
 </div>
+
+<div class="scoreContainer">
+{#each game.coopScores as coopScore}
+    <ScoreTracker name={coopScore.gameCoopScoreName} bind:score={coopScore.score} colour={coopScore.gameCoopScoreColour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} titleVisible=true/>
+{/each}
+</div>
+
+{#if playersSelected}
+    <button transition:fade class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+{/if}
 
 <style>
     .container {

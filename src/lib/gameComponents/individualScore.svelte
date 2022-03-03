@@ -41,18 +41,16 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="scoreContainer">
-        {#each players as player}
-            {#if player.selected}
-            <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} bigScores={true}/>
-            {/if}
-        {/each}
-    </div>
-    {#if playersSelected}
-        <button class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
-    {/if}
+<div class="scoreContainer">
+    {#each players as player}
+        {#if player.selected}
+        <ScoreTracker name={player.playerName} bind:score={player.score} colour={player.colour} startScore={game.startScore} minScore={game.minScore} maxScore={game.maxScore} bigScores={true}/>
+        {/if}
+    {/each}
 </div>
+{#if playersSelected}
+    <button class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
+{/if}
 
 <style>
     .container {

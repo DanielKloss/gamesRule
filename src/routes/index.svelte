@@ -57,9 +57,8 @@
 	}
 
 	function updateFilters(filters) {
-		console.log(filters)
-		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime[1] && game.maxPlayTime >= filters.playTime[0]);
-		filteredGames = filteredGames.filter(game => game.maxPlayers >= filters.players[0] && game.minPlayers <= filters.players[1]);
+		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime);
+		filteredGames = filteredGames.filter(game => game.minPlayers <= filters.players);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
 			for (const filterCategory of filters.categories){
 				if (checkGameForCategory(filteredGames[i], filterCategory)){

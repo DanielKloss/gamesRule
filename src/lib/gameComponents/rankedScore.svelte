@@ -55,7 +55,6 @@
     <PlayerSelector bind:players={players} maxPlayers={game.maxPlayers}/>
   </div>
 </div>
-<div class="container">
   <div class="scoreContainer">
     {#each players as player}
       {#if player.selected}
@@ -66,7 +65,6 @@
   {#if numberOfPlayerSelected >= game.minPlayers}
     <button class="submitButton" on:click="{() => {submitScores()}}">SUBMIT</button>
   {/if}
-</div>
 
 <style>
   .container {

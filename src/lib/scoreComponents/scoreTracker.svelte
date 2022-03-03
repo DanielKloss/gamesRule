@@ -46,6 +46,7 @@
     gap: 1rem;
     align-items: center;
     border-radius: var(--radiusLarge);
+    background-color: white;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 		padding: 1rem;
   }
