@@ -123,7 +123,7 @@
     }
 
     .spinner {
-        width: 2rem;
+        width: 3rem;
         text-align: center;
     }
 
