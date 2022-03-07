@@ -14,7 +14,8 @@
         playTime: maxPlayTime,
         players: maxPlayers,
         categories: [],
-        mechanics: []
+        mechanics: [],
+        searchTerm: ""
     }
 
     let tempFiltersPlayTime;
@@ -42,6 +43,8 @@
 </script>
 
 <div class="filtersContainer">
+    <input class="searchBox" placeholder="search" bind:value="{filters.searchTerm}" on:input="{() => dispatch('filtersChanged', filters)}"/>
+
     <div class="filterContainer">
         <p class="filterTitle">Play Time</p>
         <div class="sliderContainer">
@@ -98,6 +101,16 @@
 		padding: 1rem;
 		background-color: white;
 		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    .searchBox {
+        border-radius: var(--radiusLarge);
+		padding: 1rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border: none;
+        font-size: var(--large);
+        width: 12.5rem;
     }
 
     .filterTitle {

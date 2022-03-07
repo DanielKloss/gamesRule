@@ -57,7 +57,8 @@
 	}
 
 	function updateFilters(filters) {
-		filteredGames = games.filter(game => game.maxPlayTime <= filters.playTime);
+		filteredGames = games.filter(game => game.gameName.includes(filters.searchTerm));
+		filteredGames = filteredGames.filter(game => game.maxPlayTime <= filters.playTime);
 		filteredGames = filteredGames.filter(game => game.minPlayers <= filters.players);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
 			for (const filterCategory of filters.categories){
