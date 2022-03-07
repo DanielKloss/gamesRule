@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import IoIosArrowBack from 'svelte-icons/io/IoIosArrowBack.svelte'
     import IoIosArrowForward from 'svelte-icons/io/IoIosArrowForward.svelte'
+    import IoIosClose from 'svelte-icons/io/IoIosClose.svelte'
     const dispatch = createEventDispatcher();
 
     export let categories;
@@ -43,7 +44,10 @@
 </script>
 
 <div class="filtersContainer">
-    <input class="searchBox" placeholder="search" bind:value="{filters.searchTerm}" on:input="{() => dispatch('filtersChanged', filters)}"/>
+    <div class="filterContainer searchContainer">
+        <input class="searchBox" placeholder="search" bind:value="{filters.searchTerm}" on:input="{() => dispatch('filtersChanged', filters)}"/>
+        <div class="icon" on:click="{() => {filters.searchTerm = ""; dispatch('filtersChanged', filters)}}"><IoIosClose></IoIosClose></div>
+    </div>
 
     <div class="filterContainer">
         <p class="filterTitle">Play Time</p>
@@ -103,11 +107,12 @@
 		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
+    .searchContainer {
+        display: flex;
+        align-items: center;
+    }
+
     .searchBox {
-        border-radius: var(--radiusLarge);
-		padding: 1rem;
-		background-color: white;
-		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border: none;
         font-size: var(--large);
         width: 12.5rem;
@@ -142,6 +147,10 @@
         width: 3rem;
         text-align: center;
         border: none;
+    }
+
+    .icon {
+        width: var(--extraLarge);
     }
 
     .iconButton {
