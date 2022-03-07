@@ -46,7 +46,7 @@
 <div class="filtersContainer">
     <div class="filterContainer searchContainer">
         <input class="searchBox" placeholder="search" bind:value="{filters.searchTerm}" on:input="{() => dispatch('filtersChanged', filters)}"/>
-        <div class="icon" on:click="{() => {filters.searchTerm = ""; dispatch('filtersChanged', filters)}}"><IoIosClose></IoIosClose></div>
+        <div class="icon" class:disabled="{filters.searchTerm == ""}" on:click="{() => {filters.searchTerm = ""; dispatch('filtersChanged', filters)}}"><IoIosClose></IoIosClose></div>
     </div>
 
     <div class="filterContainer">
