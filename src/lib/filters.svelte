@@ -17,6 +17,9 @@
         mechanics: []
     }
 
+    let tempFiltersPlayTime;
+    let tempFiltersPlayers;
+
     function AddRemoveType(category){
         if (filters.categories.includes(category)){
             let index = filters.categories.indexOf(category);
@@ -43,7 +46,7 @@
         <p class="filterTitle">Play Time</p>
         <div class="sliderContainer">
             <button class="iconButton" class:disabled="{filters.playTime == 5}" on:click="{() => {if(filters.playTime > 5){filters.playTime-=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
-            <input type="number" class="spinner" bind:value={filters.playTime} on:click="{() => filters.playTime = ""}" on:change="{dispatch('filtersChanged', filters)}"/>
+            <input type="number" class="textInput" bind:value={filters.playTime} on:click="{() => {tempFiltersPlayTime = filters.playTime; filters.playTime = ""}}" on:blur="{() => {if(filters.playTime == ""){filters.playTime = tempFiltersPlayTime}}}" on:change="{dispatch('filtersChanged', filters)}"/>
             <button class="iconButton" class:disabled="{filters.playTime == maxPlayTime}" on:click="{() => {if(filters.playTime < maxPlayTime){filters.playTime+=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
@@ -52,7 +55,7 @@
         <p class="filterTitle">Players</p>
         <div class="sliderContainer">
             <button class="iconButton" class:disabled="{filters.players == 1}" on:click="{() => {if(filters.players > 1){filters.players--; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
-            <input type="number" class="spinner" bind:value={filters.players} on:click="{() => filters.players = ""}" on:change="{dispatch('filtersChanged', filters)}"/>
+            <input type="number" class="textInput" bind:value={filters.players} on:click="{() => {tempFiltersPlayers = filters.players; filters.players = ""}}" on:blur="{() => {if(filters.players == ""){filters.players = tempFiltersPlayers}}}" on:change="{dispatch('filtersChanged', filters)}"/>
             <button class="iconButton" class:disabled="{filters.players == maxPlayers}" on:click="{() => {if(filters.players < maxPlayers){filters.players++; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
@@ -122,9 +125,10 @@
         gap: 1rem;
     }
 
-    .spinner {
+    .textInput {
         width: 3rem;
         text-align: center;
+        border: none;
     }
 
     .iconButton {
