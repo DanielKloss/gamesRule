@@ -1,12 +1,33 @@
 <script>
-    export let game;
+  import IoIosTime from 'svelte-icons/io/IoIosTime.svelte'
+	import FaUsers from 'svelte-icons/fa/FaUsers.svelte'
+
+  export let game;
 </script>
 
 <div class="container">
+  <div class="iconInfoContainer">
+    <div class="playTimeContainer">
+      <div class="icon"><IoIosTime/></div>
+      {#if game.minPlayTime == game.maxPlayTime}
+        <p class="detailText">{game.minPlayTime}</p>
+      {:else}
+        <p class="detailText">{game.minPlayTime} - {game.maxPlayTime}</p>
+      {/if}
+    </div>
+    <div class="playTimeContainer">
+      <div class="icon"><FaUsers/></div>
+      {#if game.minPlayers == game.maxPlayers}
+        <p class="detailText">{game.minPlayers}</p>
+      {:else}
+        <p class="detailText">{game.minPlayers} - {game.maxPlayers}</p>
+      {/if}
+    </div>
+  </div>
   <div class="summary">
-    {#each game.ruleSummaries as rule}
-      <div class="bullet">{rule.ruleSummaryText}</div>
-    {/each}
+  {#each game.ruleSummaries as rule}
+    <div class="bullet">{rule.ruleSummaryText}</div>
+  {/each}
   </div>
 
   <div class="rules">
@@ -56,4 +77,23 @@
     margin: 1rem 1rem 2rem 1rem;
     text-align: center;
   }
+
+  .iconInfoContainer {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+	.playTimeContainer {
+		display: flex;
+		align-items: center;
+	}
+
+  .icon {
+		height: 1.5rem;
+	}
+
+	.detailText {
+		margin: 0 0 0 1rem;
+		font-size: var(--large);
+	}
 </style>
