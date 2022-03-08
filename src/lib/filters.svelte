@@ -115,7 +115,7 @@
     .searchBox {
         border: none;
         font-size: var(--large);
-        width: 12.5rem;
+        width: 8rem;
     }
 
     .filterTitle {
