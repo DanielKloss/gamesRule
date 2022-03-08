@@ -179,7 +179,7 @@
 
 	.game {
 		display: grid;
-		grid-template-columns: auto 1.5fr 0.5fr 1fr;
+		grid-template-columns: auto 1.5fr 0.65fr 1fr;
 		gap: 1rem;
 		align-items: center;
 		text-decoration: none;
@@ -202,7 +202,7 @@
 	.detailContainer {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: start;
 	}
 
 	.playTimeContainer {
