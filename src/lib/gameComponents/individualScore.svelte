@@ -73,6 +73,7 @@
 
     .submitButton {
         padding: 0.5rem;
+        margin-top: 1rem;
         border: none;
         background-color: var(--primary);
         border-radius: var(--radiusSmall);
@@ -80,5 +81,6 @@
         font-size: var(--large);
         font-weight: bold;
         text-transform: uppercase;
+        width: 100%;
     }
 </style>
