@@ -45,7 +45,7 @@
 	}
 
 	function updateFilters(filters) {
-		filteredGames = games.filter(game => game.gameName.includes(filters.searchTerm));
+		filteredGames = games.filter(game => game.gameName.includes(filters.searchTerm.toLowerCase()));
 		filteredGames = filteredGames.filter(game => game.maxPlayTime <= filters.playTime);
 		filteredGames = filteredGames.filter(game => game.minPlayers <= filters.players);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
@@ -70,6 +70,25 @@
 				}
 			}
 		}
+
+		for (const category of categories){		
+			if (filteredGames.filter(g => g.features.includes(category.categoryName)).length == 0){
+				category.disabled = true;
+			} else {
+				category.disabled = false;
+			}
+		}
+
+		for (const mechanic of mechanics){		
+			if (filteredGames.filter(g => g.features.includes(mechanic.mechanicName)).length == 0){
+				mechanic.disabled = true;
+			} else {
+				mechanic.disabled = false;
+			}
+		}
+
+		categories = categories;
+		mechanics = mechanics;
 	}
 
 	let maxPlayTime = games.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;

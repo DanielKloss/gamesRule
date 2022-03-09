@@ -70,10 +70,9 @@
     <div class="filterContainer">
         <p class="filterTitle">Types</p>
         <div class="checkboxContainer">
-            {#each categories as cateogry}
-                <div> 
-                    <input type="checkbox" on:change="{AddRemoveType(cateogry)}"/>
-                    <p class="checkboxLabel">{cateogry.categoryName}</p>
+            {#each categories as category}
+                <div class:hidden="{category.disabled == true}"> 
+                    <label class="checkboxLabel"><input type="checkbox" on:change="{AddRemoveType(category)}"/>{category.categoryName}</label>
                 </div>
             {/each}
         </div>
@@ -83,9 +82,8 @@
         <p class="filterTitle">Mechanics</p>
         <div class="checkboxContainer">
             {#each mechanics as mechanic}
-                <div>
-                    <input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>
-                    <p class="checkboxLabel">{mechanic.mechanicName}</p>
+                <div class:hidden="{mechanic.disabled == true}"> 
+                    <label class="checkboxLabel"><input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>{mechanic.mechanicName}</label>
                 </div>
             {/each}
         </div>
@@ -163,5 +161,9 @@
 
     .disabled {
         visibility: hidden;
+    }
+
+    .hidden {
+        display: none;
     }
 </style>
