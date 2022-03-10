@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from "svelte";
+    import {filters} from '$lib/stores/filters.js';
     import IoIosArrowBack from 'svelte-icons/io/IoIosArrowBack.svelte'
     import IoIosArrowForward from 'svelte-icons/io/IoIosArrowForward.svelte'
     import IoIosClose from 'svelte-icons/io/IoIosClose.svelte'
@@ -8,62 +9,31 @@
     export let categories;
     export let mechanics;
 
-    export let maxPlayTime;
-    export let maxPlayers;
-
-    let filters = {
-        playTime: maxPlayTime,
-        players: maxPlayers,
-        categories: [],
-        mechanics: [],
-        searchTerm: ""
-    }
-
     let tempFiltersPlayTime;
     let tempFiltersPlayers;
-
-    function AddRemoveType(category){
-        if (filters.categories.includes(category)){
-            let index = filters.categories.indexOf(category);
-            filters.categories.splice(index, 1);
-        } else {
-            filters.categories.push(category);
-        }
-        dispatch('filtersChanged', filters);
-    }
-
-    function AddRemoveMechanic(mechanic){
-        if (filters.mechanics.includes(mechanic)){
-            let index = filters.mechanics.indexOf(mechanic);
-            filters.mechanics.splice(index, 1);
-        } else {
-            filters.mechanics.push(mechanic);
-        }
-        dispatch('filtersChanged', filters);
-    }
 </script>
 
 <div class="filtersContainer">
     <div class="filterContainer searchContainer">
-        <input class="searchBox" placeholder="search" bind:value="{filters.searchTerm}" on:input="{() => dispatch('filtersChanged', filters)}"/>
-        <div class="icon" class:disabled="{filters.searchTerm == ""}" on:click="{() => {filters.searchTerm = ""; dispatch('filtersChanged', filters)}}"><IoIosClose></IoIosClose></div>
+        <input class="searchBox" placeholder="search" bind:value="{$filters.searchTerm}" on:input="{() => dispatch('filtersChanged')}"/>
+        <div class="icon" class:disabled="{$filters.searchTerm == ""}" on:click="{() => {$filters.searchTerm = ""; dispatch('filtersChanged')}}"><IoIosClose></IoIosClose></div>
     </div>
 
     <div class="filterContainer">
         <p class="filterTitle">Play Time</p>
         <div class="sliderContainer">
-            <button class="iconButton" class:disabled="{filters.playTime == 5}" on:click="{() => {if(filters.playTime > 5){filters.playTime-=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
-            <input type="number" class="textInput" bind:value={filters.playTime} on:click="{() => {tempFiltersPlayTime = filters.playTime; filters.playTime = ""}}" on:blur="{() => {if(filters.playTime == ""){filters.playTime = tempFiltersPlayTime}}}" on:change="{dispatch('filtersChanged', filters)}"/>
-            <button class="iconButton" class:disabled="{filters.playTime == maxPlayTime}" on:click="{() => {if(filters.playTime < maxPlayTime){filters.playTime+=5; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
+            <button class="iconButton" class:disabled="{$filters.playTime == 5}" on:click="{() => {if($filters.playTime > 5){$filters.playTime-=5; dispatch('filtersChanged')}}}"><IoIosArrowBack></IoIosArrowBack></button>
+            <input type="number" class="textInput" bind:value={$filters.playTime} on:click="{() => {tempFiltersPlayTime = $filters.playTime; $filters.playTime = ""}}" on:blur="{() => {if($filters.playTime == ""){$filters.playTime = tempFiltersPlayTime}}}" on:change="{dispatch('filtersChanged')}"/>
+            <button class="iconButton" class:disabled="{$filters.playTime == $filters.maxPlayTime}" on:click="{() => {if($filters.playTime < $filters.maxPlayTime){$filters.playTime+=5; dispatch('filtersChanged')}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
 
     <div class="filterContainer">
         <p class="filterTitle">Players</p>
         <div class="sliderContainer">
-            <button class="iconButton" class:disabled="{filters.players == 1}" on:click="{() => {if(filters.players > 1){filters.players--; dispatch('filtersChanged', filters)}}}"><IoIosArrowBack></IoIosArrowBack></button>
-            <input type="number" class="textInput" bind:value={filters.players} on:click="{() => {tempFiltersPlayers = filters.players; filters.players = ""}}" on:blur="{() => {if(filters.players == ""){filters.players = tempFiltersPlayers}}}" on:change="{dispatch('filtersChanged', filters)}"/>
-            <button class="iconButton" class:disabled="{filters.players == maxPlayers}" on:click="{() => {if(filters.players < maxPlayers){filters.players++; dispatch('filtersChanged', filters)}}}"><IoIosArrowForward></IoIosArrowForward></button>
+            <button class="iconButton" class:disabled="{$filters.players == 1}" on:click="{() => {if($filters.players > 1){$filters.players--; dispatch('filtersChanged')}}}"><IoIosArrowBack></IoIosArrowBack></button>
+            <input type="number" class="textInput" bind:value={$filters.players} on:click="{() => {tempFiltersPlayers = $filters.players; $filters.players = ""}}" on:blur="{() => {if($filters.players == ""){$filters.players = tempFiltersPlayers}}}" on:change="{dispatch('filtersChanged')}"/>
+            <button class="iconButton" class:disabled="{$filters.players == $filters.maxPlayers}" on:click="{() => {if($filters.players < $filters.maxPlayers){$filters.players++; dispatch('filtersChanged')}}}"><IoIosArrowForward></IoIosArrowForward></button>
         </div>
     </div>
 
@@ -72,7 +42,7 @@
         <div class="checkboxContainer">
             {#each categories as category}
                 <div class:hidden="{category.disabled == true}"> 
-                    <label class="checkboxLabel"><input type="checkbox" on:change="{AddRemoveType(category)}"/>{category.categoryName}</label>
+                    <label class="checkboxLabel"><input type="checkbox" bind:group="{$filters.categories}" name="categories" value="{category.categoryName}" on:change="{() => dispatch('filtersChanged')}"/>{category.categoryName}</label>
                 </div>
             {/each}
         </div>
@@ -83,7 +53,7 @@
         <div class="checkboxContainer">
             {#each mechanics as mechanic}
                 <div class:hidden="{mechanic.disabled == true}"> 
-                    <label class="checkboxLabel"><input type="checkbox" on:change="{AddRemoveMechanic(mechanic)}"/>{mechanic.mechanicName}</label>
+                    <label class="checkboxLabel"><input type="checkbox" bind:group="{$filters.mechanics}" name="mechanics" value="{mechanic.mechanicName}" on:change="{() => dispatch('filtersChanged')}"/>{mechanic.mechanicName}</label>
                 </div>
             {/each}
         </div>

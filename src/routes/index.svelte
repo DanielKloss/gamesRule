@@ -14,23 +14,15 @@
 	import IoIosTime from 'svelte-icons/io/IoIosTime.svelte'
 	import FaUsers from 'svelte-icons/fa/FaUsers.svelte'
 	import Filter from '$lib/filters.svelte';
+	import { filters } from '$lib/stores/filters';
 
 	export let games;
 	export let categories;
 	export let mechanics;
 
-	function removeArticles(game) {
-		let words = game.split(" ");
-		if(words.length <= 1) 
-			return game;
-		if(words[0] == 'A' || words[0] == 'THE' || words[0] == 'AN')
-			return words.splice(1).join(" ");
-		return game;
-	}
-
 	function checkGameForCategory(game, filtercategory){
 		for (const category of game.gameCategories.gameCategories){
-			if (filtercategory.categoryName == category.categoryName){
+			if (filtercategory == category.categoryName){
 				return true;
 			}
 		}	 
@@ -38,18 +30,23 @@
 
 	function checkGameForMechanic(game, filterMechanic){
 		for (const mechanic of game.gameMechanics.gameMechanics){
-			if (filterMechanic.mechanicName == mechanic.mechanicName){
+			if (filterMechanic == mechanic.mechanicName){
 				return true;
 			}
 		}	 
 	}
 
-	function updateFilters(filters) {
-		filteredGames = games.filter(game => game.gameName.includes(filters.searchTerm.toLowerCase()));
-		filteredGames = filteredGames.filter(game => game.maxPlayTime <= filters.playTime);
-		filteredGames = filteredGames.filter(game => game.minPlayers <= filters.players);
+	function updateFilters() {
+		if (!$filters.filtersOn){
+			filteredGames = games;
+			return;
+		}
+
+		filteredGames = games.filter(game => game.gameName.includes($filters.searchTerm.toLowerCase()));
+		filteredGames = filteredGames.filter(game => game.maxPlayTime <= $filters.playTime);
+		filteredGames = filteredGames.filter(game => game.minPlayers <= $filters.players && game.maxPlayers >= $filters.players);
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
-			for (const filterCategory of filters.categories){
+			for (const filterCategory of $filters.categories){
 				if (checkGameForCategory(filteredGames[i], filterCategory)){
 					continue;
 				} else {
@@ -60,7 +57,7 @@
 			}
 		}
 		for (var i = filteredGames.length - 1; i >= 0; i--) {
-			for (const filterMechanic of filters.mechanics){
+			for (const filterMechanic of $filters.mechanics){
 				if (checkGameForMechanic(filteredGames[i], filterMechanic)){
 					continue;
 				} else {
@@ -89,32 +86,13 @@
 
 		categories = categories;
 		mechanics = mechanics;
+
+		$filters.maxPlayTime = filteredGames.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;
+		$filters.maxPlayers = filteredGames.reduce(function(max, game) { return game.maxPlayers > max.maxPlayers? game : max; }).maxPlayers;
 	}
-
-	let maxPlayTime = games.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;
-	let maxPlayers = games.reduce(function(max, game) { return game.maxPlayers > max.maxPlayers? game : max; }).maxPlayers;
-
-	for (const game of games) {
-		game.features = [];
-
-		for (const category of game.gameCategories.gameCategories){
-			game.features.push(category.categoryName);
-		}
-
-		for (const category of game.gameMechanics.gameMechanics){
-			game.features.push(category.mechanicName);
-		}
-	}
-
-	games = games.sort(function(a, b) {
-		var gameA = a.gameName.toUpperCase();
-		var gameB = b.gameName.toUpperCase();
-		gameA = removeArticles(gameA);
-		gameB = removeArticles(gameB);
-		return (gameA < gameB) ? -1 : (gameA > gameB) ? 1 : 0;
-	});
 
 	let filteredGames = games;
+	updateFilters();
 
 	let styles = {
 		'primary': "#BABFD1"
@@ -131,7 +109,10 @@
 
 <div class="pageFlex" style="{cssVarStyles}">
 	<div class="filterContainer">
-		<Filter {categories} {mechanics} {maxPlayTime} {maxPlayers} on:filtersChanged={(e) => updateFilters(e.detail)}/>
+		<button class="filterButton" class:filterButtonPressed="{$filters.filtersOn}" on:click="{() => {$filters.filtersOn = !$filters.filtersOn; updateFilters()}}">Filters</button>
+		{#if $filters.filtersOn}
+		<Filter {categories} {mechanics} on:filtersChanged={(e) => updateFilters()}/>
+		{/if}
 	</div>
 	<div class="divider"/>
 	<div class="gamesContainer">
@@ -172,6 +153,14 @@
 		display: grid;
 		grid-template-columns: auto auto 1fr;
 		gap: 1rem;
+	}
+
+	.filterContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		align-content: stretch;
+		width: 12rem;
 	}
 
 	.divider {
@@ -239,5 +228,22 @@
 	.detailText {
 		margin: 0 0 0 1rem;
 		font-size: var(--large);
+	}
+
+	.filterButton {
+		color: black;
+		border-radius: var(--radiusLarge);
+		padding: 0.5rem 1rem;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+		border: none;
+		font-size: var(--large);
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.filterButtonPressed {
+		box-shadow: none;
+		background-color: var(--primary);
 	}
 </style>

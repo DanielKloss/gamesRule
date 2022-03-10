@@ -1,5 +1,5 @@
 <script context="module">
-  export async function load ({ fetch }){
+	export async function load ({ fetch }){
 		try {
 			const gamesResult = await fetch('/api/games');
 			const gamesBody = await gamesResult.json();
@@ -13,13 +13,29 @@
 			const mechanicsBody = await mechanicsResult.json();
 			const mechanics = mechanicsBody.mechanics;
 
+			let maxPlayTime = games.reduce(function(max, game) { return game.maxPlayTime > max.maxPlayTime? game : max; }).maxPlayTime;
+			let maxPlayers = games.reduce(function(max, game) { return game.maxPlayers > max.maxPlayers? game : max; }).maxPlayers;
+
 			return {
-				stuff: { games, categories, mechanics }
+				stuff: { games, categories, mechanics},
+				props: { maxPlayTime, maxPlayers }
 			};
 		} catch (error) {
 			console.log(error);
 		}
 	}
+</script>
+
+<script>
+	import {filters} from '$lib/stores/filters.js';
+
+	export let maxPlayTime;
+	export let maxPlayers;
+
+	$filters.playTime = maxPlayTime;
+	$filters.maxPlayTime = maxPlayTime;
+    $filters.players = maxPlayers;
+    $filters.maxPlayers = maxPlayers;
 </script>
 
 <main>
