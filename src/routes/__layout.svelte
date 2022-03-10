@@ -32,9 +32,9 @@
 	export let maxPlayTime;
 	export let maxPlayers;
 
-	$filters.playTime = maxPlayTime;
+	$filters.playTime = 60;
 	$filters.maxPlayTime = maxPlayTime;
-    $filters.players = maxPlayers;
+    $filters.players = 4;
     $filters.maxPlayers = maxPlayers;
 </script>
 
